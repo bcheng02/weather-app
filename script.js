@@ -14,7 +14,7 @@ function getSearch() {
 
 async function getWeather() {
     try {
-        const response = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=3e4ca77f7e714797b21183350231907&q=${userLocation}`,  { mode: 'cors' })
+        const response = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=3e4ca77f7e714797b21183350231907&q=${userLocation}&days=3`,  { mode: 'cors' })
         const responseJSON = await (response.json())
         console.log(responseJSON)
     
