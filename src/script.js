@@ -53,7 +53,6 @@ async function getWeather() {
             "\n\u2022 (or the API is down 😔)"
             )
     }   
-    console.log((endTime - startTime)/1000 + " seconds")
     resultAmountAndTime.textContent = `About 1 result (${(endTime - startTime)/1000} seconds)`
     
 }
