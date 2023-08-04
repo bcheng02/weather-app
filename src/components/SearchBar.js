@@ -5,9 +5,6 @@ import { useState } from "react"
 function SearchBar({ onClickSearch }) {
     let [searchTerm, setSearchTerm] = useState('Vancouver')
 
-    function handleSearchChange(event) {
-        setSearchTerm(event.target.value)
-    }
 
     return (
         <div id="SearchBar">
@@ -17,7 +14,12 @@ function SearchBar({ onClickSearch }) {
                 type="text"
                 autoComplete="off"
                 value={searchTerm}
-                onChange={handleSearchChange}
+                onChange={(e) => {
+                    setSearchTerm(e.target.value)
+                    console.log("a change in search term")
+                }
+
+                }
 
             />
             <button
@@ -25,6 +27,7 @@ function SearchBar({ onClickSearch }) {
                 type="button"
                 onClick={() => {
                     onClickSearch(searchTerm)
+                    console.log("search btn clicked")
                 }}
             >
                 go!

@@ -8,6 +8,11 @@ async function getWeather(userLocation) {
 
     try {
         const response = await fetch(`${API_URL}/v1/forecast.json?key=${API_KEY}&q=${userLocation}&days=8`, { mode: 'cors' })
+
+        if (!response.ok) {
+            throw new Error('unable to fetch weather data')
+        }
+
         const responseJSON = await (response.json())
 
         endTime = performance.now()
@@ -18,8 +23,8 @@ async function getWeather(userLocation) {
         console.log(responseJSON)
         console.log(responseJSON.forecast.forecastday) // arr of 8 days
 
-        console.log(`About 1 result (${(endTime - startTime) / 1000} seconds)`)
-        return responseJSON
+        let resultMsg = (`About 1 result (${(endTime - startTime) / 1000} seconds)`)
+        return [responseJSON.forecast.forecastday, resultMsg]
 
 
         // displaying values on HTML
@@ -29,7 +34,6 @@ async function getWeather(userLocation) {
         // ** DON'T FORGET THIS img.src = "http:" + responseJSON.current.condition.icon
 
     } catch (error) {
-        console.log(error)
         alert(
             "Invalid location, please enter:" +
             "\n\u2022 city name e.g: Paris" +
@@ -43,6 +47,7 @@ async function getWeather(userLocation) {
             "\n\u2022 IP address (IPv4 and IPv6 supported) e.g: 100.0.0.1" +
             "\n\u2022 (or the API is down 😔)"
         )
+        throw (error)
     }
 
 }

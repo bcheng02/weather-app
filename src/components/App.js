@@ -1,14 +1,19 @@
 import './App.css';
 import WeatherCard from './WeatherCard';
-import Top from './Top';
+
+
 
 function App() {
+
+  function yo(x) {
+    console.log("yo" + x)
+  }
+
   return (
     <div className="App">
-      <Top />
+      {/* <Top onClickSearch={yo} /> */}
 
-      {/* really hope that this is right */}
-      <WeatherCard userLocation="Vancouver" />
+      <WeatherCard />
 
 
     </div>
