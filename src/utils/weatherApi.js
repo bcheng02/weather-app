@@ -1,13 +1,15 @@
-const API_KEY = "4f67568db80d4e5fa41205347232807"
+const API_KEY = "240b0732b1be4c069a2192842230408"
 const API_URL = "https://api.weatherapi.com"
+const NUM_DAYS = 8
 
-// MAYBE JUST RETURN THE OBJECT, AND THEN SOMETHING ELSE DEALS WITH PARSING + RENDERING
+
+// returns arr w/ [weather info, time the API call]
 async function getWeather(userLocation) {
     let startTime = performance.now()
     let endTime
 
     try {
-        const response = await fetch(`${API_URL}/v1/forecast.json?key=${API_KEY}&q=${userLocation}&days=8`, { mode: 'cors' })
+        const response = await fetch(`${API_URL}/v1/forecast.json?key=${API_KEY}&q=${userLocation}&days=${NUM_DAYS}`, { mode: 'cors' })
 
         if (!response.ok) {
             throw new Error('unable to fetch weather data')
@@ -24,7 +26,7 @@ async function getWeather(userLocation) {
         console.log(responseJSON.forecast.forecastday) // arr of 8 days
 
         let resultMsg = (`About 1 result (${(endTime - startTime) / 1000} seconds)`)
-        return [responseJSON.forecast.forecastday, resultMsg]
+        return [responseJSON, resultMsg]
 
 
         // displaying values on HTML
