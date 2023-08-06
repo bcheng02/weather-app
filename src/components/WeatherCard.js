@@ -9,6 +9,7 @@ import { format, getHours, parseISO } from "date-fns"
 
 
 function WeatherCard() {
+    const tabs = ["Temperature", "Precipitation", "Wind"]
     let [weatherData, setWeatherData] = useState([])
     let [resultsAndTime, setResultsAndTime] = useState("123 results in 321 sec")
     let [imgSrc, setImgSrc] = useState('')
@@ -27,6 +28,9 @@ function WeatherCard() {
     let [cardImg5, setCardImg5] = useState('')
     let [cardImg6, setCardImg6] = useState('')
     let [cardImg7, setCardImg7] = useState('')
+    let [selectedCard, setSelectedCard] = useState(-1)
+
+    let [selectedTab, setSelectedTab] = useState(-1)
 
     // TODO: why break when this is state
     var data
@@ -103,14 +107,25 @@ function WeatherCard() {
                 </div>
 
                 <div id="graphContainer">
-                    <span>Temperature</span> <span>|</span> <span>Precipitation</span> <span>|</span> <span>Wind</span>
-                    <div id="graph">**graph goes here eventually</div>
+                    {tabs.map((tab, index) => (
+                        <span
+                            key={tab}
+                            onClick={() => { setSelectedTab(index) }}
+                            className={selectedTab == index ? 'active' : null}
+                        >
+                            {tab}
+                        </span>
+                    ))}
                 </div>
 
                 <div id="weekForecast">
                     {weatherData.length > 0 &&
                         weatherData[0].forecast.forecastday.map((weatherObj, index) => (
-                            <span key={"card-" + index}>
+                            <div
+                                key={"card-" + index}
+                                onClick={() => setSelectedCard(index)}
+                                className={selectedCard == index ? 'active' : null}
+                            >
                                 {format(parseISO(weatherObj.date), "E")}
                                 {index == 0 ? <img src={imgSrc} /> : <img src={eval("cardImg" + index)} />}
                                 <div>
@@ -118,7 +133,7 @@ function WeatherCard() {
 
                                     <span> {weatherObj.day.mintemp_c}°</span>
                                 </div>
-                            </span>
+                            </div>
                         ))
                     }
                 </div>
@@ -132,15 +147,3 @@ function WeatherCard() {
 }
 
 export default WeatherCard
-
-// {weatherData.length > 0 && weatherData.map((weatherObj, index) => {
-//     <span id={"card-" + index}>
-//         {/* {index == 0 ? <img src={imgSrc}/> : <img src={eval("cardImg" + index )}/>} */}
-//         hello?
-//     </span>
-//     weatherObj.date
-//     weatherObj.day.condition.icon
-//     weatherObj.day.condition.maxtemp_c
-//     weatherObj.day.condition.mintemp_c
-
-// })}
