@@ -5,6 +5,8 @@ import Navbar from "./Navbar"
 import logo from '../images/weather-logo.svg'
 import { format, getHours, parseISO } from "date-fns"
 
+import ChartComponent from "./Graph"
+
 
 
 
@@ -28,9 +30,11 @@ function WeatherCard() {
     let [cardImg5, setCardImg5] = useState('')
     let [cardImg6, setCardImg6] = useState('')
     let [cardImg7, setCardImg7] = useState('')
-    let [selectedCard, setSelectedCard] = useState(-1)
 
-    let [selectedTab, setSelectedTab] = useState(-1)
+    let [selectedCard, setSelectedCard] = useState(0)
+    let [selectedTab, setSelectedTab] = useState(0)
+
+
 
     // TODO: why break when this is state
     var data
@@ -110,12 +114,18 @@ function WeatherCard() {
                     {tabs.map((tab, index) => (
                         <span
                             key={tab}
-                            onClick={() => { setSelectedTab(index) }}
+                            onClick={() => {
+                                setSelectedTab(index)
+
+                            }}
                             className={selectedTab == index ? 'active' : null}
                         >
                             {tab}
                         </span>
                     ))}
+
+                    <ChartComponent weatherData={weatherData} selectedTab={selectedTab} />
+                    {/* maybe conditional rendering based on selectedTab == 0,1,2 */}
                 </div>
 
                 <div id="weekForecast">
