@@ -14,7 +14,7 @@ function WeatherCard() {
     const tabs = ["Temperature", "Precipitation", "Wind"]
     let [weatherData, setWeatherData] = useState([])
     let [resultsAndTime, setResultsAndTime] = useState("123 results in 321 sec")
-    let [imgSrc, setImgSrc] = useState('')
+    let [currentImgSrc, setCurrentImgSrc] = useState('')
     let [currentTemp, setcurrentTemp] = useState('12345')
 
     let [precip, setPrecip] = useState('placeholder for precip')
@@ -23,6 +23,7 @@ function WeatherCard() {
     let [currDate, setCurrDate] = useState('placeholder for current date')
     let [currCond, setCurrCond] = useState('placeholder for current condition')
 
+    let [cardImg0, setCardImg0] = useState('')
     let [cardImg1, setCardImg1] = useState('')
     let [cardImg2, setCardImg2] = useState('')
     let [cardImg3, setCardImg3] = useState('')
@@ -58,14 +59,20 @@ function WeatherCard() {
         let currentHourObj = data[0].forecast.forecastday[0].hour[currentHour]
 
         setResultsAndTime(data[1])
-        setImgSrc("http:" + currentHourObj.condition.icon)
-        setcurrentTemp(currentHourObj.temp_c)
+        setCurrentImgSrc("http:" + data[0].current.condition.icon)
+
+
+        // setcurrentTemp(currentHourObj.temp_c)
+        setcurrentTemp(data[0].current.temp_c)
+
+
         setPrecip(currentHourObj.chance_of_rain)
         setHumidity(currentHourObj.humidity)
         setWind(currentHourObj.wind_kph)
         setCurrCond(currentHourObj.condition.text)
         setCurrDate(format(currentDate, "EEEE h:00 aaaa"))
 
+        setCardImg0(data[0].forecast.forecastday[0].day.condition.icon)
         setCardImg1(data[0].forecast.forecastday[1].day.condition.icon)
         setCardImg2(data[0].forecast.forecastday[2].day.condition.icon)
         setCardImg3(data[0].forecast.forecastday[3].day.condition.icon)
@@ -90,7 +97,7 @@ function WeatherCard() {
                 </div>
 
                 <div>
-                    <span><img id="currentImg" src={imgSrc} alt="an icon for the current weather"></img></span>
+                    <span><img id="currentImg" src={currentImgSrc} alt="an icon for the current weather"></img></span>
 
                     <span id="currentTemp" className="unit_temp">{currentTemp}</span>
 
@@ -124,8 +131,10 @@ function WeatherCard() {
                         </span>
                     ))}
 
-                    <ChartComponent weatherData={weatherData} selectedTab={selectedTab} />
-                    {/* maybe conditional rendering based on selectedTab == 0,1,2 */}
+                    <div id="chartContainer" style={{ width: 39 + "rem", height: 10 + "rem" }}>
+                        <ChartComponent weatherData={weatherData} selectedTab={selectedTab} selectedCard={selectedCard} />
+
+                    </div>
                 </div>
 
                 <div id="weekForecast">
@@ -137,7 +146,7 @@ function WeatherCard() {
                                 className={selectedCard == index ? 'active' : null}
                             >
                                 {format(parseISO(weatherObj.date), "E")}
-                                {index == 0 ? <img src={imgSrc} /> : <img src={eval("cardImg" + index)} />}
+                                <img src={eval("cardImg" + index)} />
                                 <div>
                                     <span>{weatherObj.day.maxtemp_c}°</span>
 
