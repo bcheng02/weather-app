@@ -11,6 +11,7 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
     // only do ALL of the logic if you have the weatherData obj
     if (weatherData[0]) {
 
+        // TODO: i only need 24 unless i've selected the current day which can seep thru to the next day, so put a condition that checks if selectedCard == 0
         let arrOf48hr = weatherData[0].forecast.forecastday[selectedCard].hour.concat(weatherData[0].forecast.forecastday[selectedCard + 1].hour)
         // 24 hours starting from current hour thru to the next day (that's why need 48hrs ^)
         let currentHour = getHours(parseISO(weatherData[0].current.last_updated))
@@ -35,8 +36,21 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
                 let selectedDate = parseISO(selectedHourObj.time)
                 arrOfSetStates[5](format(selectedDate, "EEEE h:00 aaaa"))
                 arrOfSetStates[6](selectedHourObj.condition.text)
-                // arrOfSetStates[7]()
-                // arrOfSetStates[8]()
+
+
+                // not messing with setSelectedCard since state updates the graph,
+                // but I really want it to stay on the same graph, just apply 
+                // different styling to show that you've crossed over
+                let selectedDateWeekDay = format(selectedDate, "E")
+                let currentDayWeekDay = format(parseISO(weatherData[0].forecast.forecastday[0].date), "E")
+                if (selectedDateWeekDay !== currentDayWeekDay) {
+                    document.getElementById('card-0').classList.remove('active')
+                    document.getElementById('card-1').classList.add('active')
+                } else {
+                    document.getElementById('card-0').classList.add('active')
+                    document.getElementById('card-1').classList.remove('active')
+                }
+
 
 
                 // [setCurrentImgSrc,
@@ -47,14 +61,8 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
                 //     setCurrDate,
                 //     setCurrCond,
                 //     setSelectedCard,
-                //     setSelectedHour]
             }
-
-
         }
-
-
-
 
         let data = {
             labels: arrOf24hrTime,
@@ -95,18 +103,14 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
                     // THIS LIBRARY IS SO AWFUL I WANT TO RUN INTO TRAFFIC
                     align: 'right',
                     anchor: 'center',
-                    offset: 10,
-                    // PADDING DOESN'T ACTUALLY DO ANYTHING BTW, IT JUST DOES EXACTLY WHAT OFFSET DOES
-                    padding: {
-                        top: 0,
-                        right: 0,
-                        bottom: 0,
-                        left: 0
-                    },
+                    offset: 0,
                     formatter: (value, context) => {
                         // Round the data value to 2 decimal places after it is displayed
                         return (context.dataIndex % 3 === 0) ? Math.round(value) : ''
                     },
+                    color: (context) => {
+                        if (context.dataIndex === -1) return 'red'
+                    }
                 },
             },
             scales: {
@@ -146,6 +150,8 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
             },
             maintainAspectRatio: false,
         };
+
+
 
         if (selectedTab === 0) {
             // set tab specific data
