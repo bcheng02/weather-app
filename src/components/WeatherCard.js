@@ -14,7 +14,7 @@ function WeatherCard() {
     let [resultsAndTime, setResultsAndTime] = useState("123 results in 321 sec")
 
     let [currentImgSrc, setCurrentImgSrc] = useState('')
-    let [currentTemp, setcurrentTemp] = useState('12345')
+    let [currentTemp, setCurrentTemp] = useState('12345')
     let [precip, setPrecip] = useState('placeholder for precip')
     let [humidity, setHumidity] = useState('placeholder for humidity')
     let [wind, setWind] = useState('placeholder for wind')
@@ -61,8 +61,8 @@ function WeatherCard() {
         setCurrentImgSrc(data[0].current.condition.icon)
 
 
-        // no setcurrentTemp(currentHourObj.temp_c), this is more accurate
-        setcurrentTemp(Math.round(data[0].current.temp_c))
+        // no setCurrentTemp(currentHourObj.temp_c), this is more accurate
+        setCurrentTemp(Math.round(data[0].current.temp_c))
 
 
         setPrecip(currentHourObj.chance_of_rain)
@@ -136,13 +136,14 @@ function WeatherCard() {
                             selectedTab={selectedTab}
                             selectedCard={selectedCard}
                             arrOfSetStates={[setCurrentImgSrc,
-                                setcurrentTemp,
+                                setCurrentTemp,
                                 setPrecip,
                                 setHumidity,
                                 setWind,
                                 setCurrDate,
                                 setCurrCond,
-                                setSelectedCard,]
+                                setSelectedCard,
+                            ]
                             }
                         />
 
@@ -155,7 +156,17 @@ function WeatherCard() {
                             <div
                                 id={"card-" + index}
                                 key={"card-" + index}
-                                onClick={() => setSelectedCard(index)}
+                                onClick={() => {
+                                    let weekDayObj = weatherData[0].forecast.forecastday[index]
+                                    setCurrentImgSrc(weekDayObj.day.condition.icon)
+                                    setCurrentTemp(weekDayObj.day.avgtemp_c)
+                                    setPrecip(weekDayObj.day.daily_chance_of_rain)
+                                    setHumidity(weekDayObj.day.avghumidity)
+                                    setWind(weekDayObj.day.maxwind_kph)
+                                    setCurrDate(format(parseISO(weekDayObj.date), "EEEE"))
+                                    setCurrCond(weekDayObj.day.condition.text)
+                                    setSelectedCard(index)
+                                }}
                                 className={selectedCard === index ? 'active' : null}
                             >
                                 {format(parseISO(weatherObj.date), "E")}
