@@ -33,7 +33,6 @@ function WeatherCard() {
     let [selectedCard, setSelectedCard] = useState(0)
     let [selectedTab, setSelectedTab] = useState(0)
     // TODO: unsure about this one, only possible if can change the style
-    let [selectedHour, setSelectedHour] = useState(0)
 
 
 
@@ -143,8 +142,7 @@ function WeatherCard() {
                                 setWind,
                                 setCurrDate,
                                 setCurrCond,
-                                setSelectedCard,
-                                setSelectedHour]
+                                setSelectedCard,]
                             }
                         />
 
@@ -155,6 +153,7 @@ function WeatherCard() {
                     {weatherData.length > 0 &&
                         weatherData[0].forecast.forecastday.map((weatherObj, index) => (
                             <div
+                                id={"card-" + index}
                                 key={"card-" + index}
                                 onClick={() => setSelectedCard(index)}
                                 className={selectedCard === index ? 'active' : null}
