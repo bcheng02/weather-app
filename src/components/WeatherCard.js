@@ -8,15 +8,13 @@ import { format, getHours, parseISO } from "date-fns"
 import ChartComponent from "./Graph"
 
 
-
-
 function WeatherCard() {
     const tabs = ["Temperature", "Precipitation", "Wind"]
     let [weatherData, setWeatherData] = useState([])
     let [resultsAndTime, setResultsAndTime] = useState("123 results in 321 sec")
+
     let [currentImgSrc, setCurrentImgSrc] = useState('')
     let [currentTemp, setcurrentTemp] = useState('12345')
-
     let [precip, setPrecip] = useState('placeholder for precip')
     let [humidity, setHumidity] = useState('placeholder for humidity')
     let [wind, setWind] = useState('placeholder for wind')
@@ -34,11 +32,13 @@ function WeatherCard() {
 
     let [selectedCard, setSelectedCard] = useState(0)
     let [selectedTab, setSelectedTab] = useState(0)
+    // TODO: unsure about this one, only possible if can change the style
+    let [selectedHour, setSelectedHour] = useState(0)
 
 
 
     // TODO: why break when this is state
-    var data
+    let data
 
 
     // TODO: see why the fcn calls twice on page load
@@ -59,17 +59,17 @@ function WeatherCard() {
         let currentHourObj = data[0].forecast.forecastday[0].hour[currentHour]
 
         setResultsAndTime(data[1])
-        setCurrentImgSrc("http:" + data[0].current.condition.icon)
+        setCurrentImgSrc(data[0].current.condition.icon)
 
 
-        // setcurrentTemp(currentHourObj.temp_c)
-        setcurrentTemp(data[0].current.temp_c)
+        // no setcurrentTemp(currentHourObj.temp_c), this is more accurate
+        setcurrentTemp(Math.round(data[0].current.temp_c))
 
 
         setPrecip(currentHourObj.chance_of_rain)
         setHumidity(currentHourObj.humidity)
-        setWind(currentHourObj.wind_kph)
-        setCurrCond(currentHourObj.condition.text)
+        setWind(Math.round(currentHourObj.wind_kph))
+        setCurrCond(data[0].current.condition.text)
         setCurrDate(format(currentDate, "EEEE h:00 aaaa"))
 
         setCardImg0(data[0].forecast.forecastday[0].day.condition.icon)
@@ -125,14 +125,28 @@ function WeatherCard() {
                                 setSelectedTab(index)
 
                             }}
-                            className={selectedTab == index ? 'active' : null}
+                            className={selectedTab === index ? 'active' : null}
                         >
                             {tab}
                         </span>
                     ))}
 
                     <div id="chartContainer" style={{ width: 39 + "rem", height: 10 + "rem" }}>
-                        <ChartComponent weatherData={weatherData} selectedTab={selectedTab} selectedCard={selectedCard} />
+                        <ChartComponent
+                            weatherData={weatherData}
+                            selectedTab={selectedTab}
+                            selectedCard={selectedCard}
+                            arrOfSetStates={[setCurrentImgSrc,
+                                setcurrentTemp,
+                                setPrecip,
+                                setHumidity,
+                                setWind,
+                                setCurrDate,
+                                setCurrCond,
+                                setSelectedCard,
+                                setSelectedHour]
+                            }
+                        />
 
                     </div>
                 </div>
@@ -143,14 +157,14 @@ function WeatherCard() {
                             <div
                                 key={"card-" + index}
                                 onClick={() => setSelectedCard(index)}
-                                className={selectedCard == index ? 'active' : null}
+                                className={selectedCard === index ? 'active' : null}
                             >
                                 {format(parseISO(weatherObj.date), "E")}
-                                <img src={eval("cardImg" + index)} />
+                                <img src={eval("cardImg" + index)} alt="icon for weather condition in forecasted days" />
                                 <div>
-                                    <span>{weatherObj.day.maxtemp_c}°</span>
+                                    <span>{Math.round(weatherObj.day.maxtemp_c)}°</span>
 
-                                    <span> {weatherObj.day.mintemp_c}°</span>
+                                    <span> {Math.round(weatherObj.day.mintemp_c)}°</span>
                                 </div>
                             </div>
                         ))
