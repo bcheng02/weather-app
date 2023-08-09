@@ -167,12 +167,10 @@ function WeatherCard() {
                                     setCurrCond(weekDayObj.day.condition.text)
                                     setSelectedCard(index)
 
-                                    if (index !== 1 && document.getElementById('card-1').classList.contains('active')) {
-                                        document.getElementById('card-1').classList.remove('active')
-                                        document.getElementById('card-0').classList.add('active')
-                                    }
+                                    document.querySelectorAll('.card').forEach(card => card.classList.remove('active'))
+                                    document.getElementById('card-' + index).classList.add('active')
                                 }}
-                                className={selectedCard === index ? 'active' : null}
+                                className={selectedCard === index ? 'active card' : 'card'}
                             >
                                 {format(parseISO(weatherObj.date), "E")}
                                 <img src={eval("cardImg" + index)} alt="icon for weather condition in forecasted days" />
