@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { Chart as ChartJS } from 'chart.js/auto'
-import { Line, Chart, getElementAtEvent } from 'react-chartjs-2';
+import { Line, Chart, getElementAtEvent, Bar } from 'react-chartjs-2';
 import { format, getHours, parseISO } from 'date-fns';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
@@ -27,54 +27,39 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
         let arrOf24hrTime = arrOf24hr.map((hour) => format((parseISO(hour.time)), "h aaaa"))
 
         const onClick = (event) => {
-            let element = getElementAtEvent(chartRef.current, event)
+            if (selectedTab === 0) {
+                let element = getElementAtEvent(chartRef.current, event)
 
-            // it's a vaid data point if getElementAtEvent returns a non-empty array
-            let isDataPoint = element.length !== 0
-            if (isDataPoint) {
-                let selectedHourObj = arrOf24hr[element[0].index]
+                // it's a vaid data point if getElementAtEvent returns a non-empty array
+                let isDataPoint = element.length !== 0
+                if (isDataPoint) {
+                    let selectedHourObj = arrOf24hr[element[0].index]
 
-                arrOfSetStates[0](selectedHourObj.condition.icon)
-                arrOfSetStates[1](Math.round(selectedHourObj.temp_c))
-                arrOfSetStates[2](selectedHourObj.chance_of_rain)
-                arrOfSetStates[3](selectedHourObj.humidity)
-                arrOfSetStates[4](Math.round(selectedHourObj.wind_kph))
-                let selectedDate = parseISO(selectedHourObj.time)
-                arrOfSetStates[5](format(selectedDate, "EEEE h:00 aaaa"))
-                arrOfSetStates[6](selectedHourObj.condition.text)
+                    arrOfSetStates[0](selectedHourObj.condition.icon)
+                    arrOfSetStates[1](Math.round(selectedHourObj.temp_c))
+                    arrOfSetStates[2](selectedHourObj.chance_of_rain)
+                    arrOfSetStates[3](selectedHourObj.humidity)
+                    arrOfSetStates[4](Math.round(selectedHourObj.wind_kph))
+                    let selectedDate = parseISO(selectedHourObj.time)
+                    arrOfSetStates[5](format(selectedDate, "EEEE h:00 aaaa"))
+                    arrOfSetStates[6](selectedHourObj.condition.text)
 
 
-                if (selectedCard === 0) {
-                    // not messing with setSelectedCard since state updates the graph,
-                    // but I really want it to stay on the same graph, just apply 
-                    // different styling to show that you've crossed over to next day
-                    let selectedDateWeekDay = format(selectedDate, "E")
-                    let currentDayWeekDay = format(parseISO(weatherData[0].forecast.forecastday[0].date), "E")
-                    if (selectedDateWeekDay !== currentDayWeekDay) {
-                        document.getElementById('card-0').classList.remove('active')
-                        document.getElementById('card-1').classList.add('active')
-                    } else {
-                        document.getElementById('card-0').classList.add('active')
-                        document.getElementById('card-1').classList.remove('active')
+                    if (selectedCard === 0) {
+                        // not messing with setSelectedCard since state updates the graph,
+                        // but I really want it to stay on the same graph, just apply 
+                        // different styling to show that you've crossed over to next day
+                        let selectedDateWeekDay = format(selectedDate, "E")
+                        let currentDayWeekDay = format(parseISO(weatherData[0].forecast.forecastday[0].date), "E")
+                        if (selectedDateWeekDay !== currentDayWeekDay) {
+                            document.getElementById('card-0').classList.remove('active')
+                            document.getElementById('card-1').classList.add('active')
+                        } else {
+                            document.getElementById('card-0').classList.add('active')
+                            document.getElementById('card-1').classList.remove('active')
+                        }
                     }
                 }
-
-
-                // TODO:
-                // 1. When I cross over to the next day, the click the original day card again, it doesn't update the weather info and doesn't apply styling. when i click on the card
-                // again I want it to do the thing that it did on load which I think can be achieved by setting the states
-                // 2. When I cross over and click another day, it doesn't remove the styling of the crossed over day
-                // 3. building on 1, when I click a card it doesn't update the weather info!
-
-
-                // [setCurrentImgSrc,
-                //     setcurrentTemp,
-                //     setPrecip,
-                //     setHumidity,
-                //     setWind,
-                //     setCurrDate,
-                //     setCurrCond,
-                //     setSelectedCard,
             }
         }
 
@@ -87,6 +72,17 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
                     fill: true,
                     backgroundColor: 'rgb(255, 245, 204)',
                     borderColor: 'rgb(255,204,0)',
+                    tension: 0.1,
+                    datalabels: {
+                        color: 'rgba(0,0,0,0)'
+                    }
+                },
+                {
+                    label: "placeholder label",
+                    data: [65, 59, 80, 81, 56, 55, 24],
+                    fill: true,
+                    backgroundColor: 'rgba(0,0,0,0)',
+                    borderColor: 'rgba(0,0,0,0)',
                     tension: 0.1,
                 },
             ],
@@ -136,7 +132,8 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
                     grid: {
                         display: false,
                         drawBorder: false
-                    }
+                    },
+                    // stacked: true,
 
                 },
                 x: {
@@ -159,7 +156,8 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
                         // HAHAHA IT ACTUALLY WORKED I FINALLY FOUND IT 
                         // AFTER AN HOUR OF SEARCHING THIS LIBRARY SUCKS
                         color: 'white'
-                    }
+                    },
+                    // stacked: true,
                 }
             },
             maintainAspectRatio: false,
@@ -172,28 +170,38 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
             let arrOf24hrTemp = arrOf24hr.map((hour) => hour.temp_c)
             data.datasets[0].data = arrOf24hrTemp
 
+            // scaled up as a trick to get higher data labels 
+            // (hide old data labels, show new data labels, hide new graph)
+            data.datasets[1].data = arrOf24hrTemp.map(temp => temp * 1.07)
+
+
             // config
             let yMax = Math.max(...arrOf24hrTemp)
             let yMin = Math.min(...arrOf24hrTemp)
             let yMargin = yMax * 0.05
             options.scales.y.max = Math.round(yMax + yMargin)
             options.scales.y.min = Math.round(yMin - yMargin)
-            options.scales.y.ticks.stepSize = 100
+            // options.scales.y.ticks.stepSize = 100
             options.scales.y.ticks.beginAtZero = false
 
+            return <Line
+                data={data}
+                plugins={[ChartDataLabels]}
+                options={options}
+                ref={chartRef} // Add the ref here
+                onClick={onClick}
+            />;
+
         } else if (selectedTab === 1) {
-            data = {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-                datasets: [
-                    {
-                        label: 'second tab',
-                        data: [75, 59, 80, 81, 56, 55, 40],
-                        fill: false,
-                        borderColor: 'rgb(75, 192, 192)',
-                        tension: 0.1,
-                    },
-                ],
-            };
+            let arrOf24hrPrecip = arrOf24hr.map((hour) => hour.chance_of_rain)
+            data.datasets[0].data = arrOf24hrPrecip
+            data.datasets[1].data = []
+            console.log(arrOf24hrPrecip)
+            return <Bar
+                data={data}
+                plugins={[ChartDataLabels]}
+                options={options}
+            />;
         } else {
             data = {
                 labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
