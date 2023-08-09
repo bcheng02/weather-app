@@ -159,13 +159,18 @@ function WeatherCard() {
                                 onClick={() => {
                                     let weekDayObj = weatherData[0].forecast.forecastday[index]
                                     setCurrentImgSrc(weekDayObj.day.condition.icon)
-                                    setCurrentTemp(weekDayObj.day.avgtemp_c)
+                                    setCurrentTemp(Math.round(weekDayObj.day.avgtemp_c))
                                     setPrecip(weekDayObj.day.daily_chance_of_rain)
                                     setHumidity(weekDayObj.day.avghumidity)
-                                    setWind(weekDayObj.day.maxwind_kph)
+                                    setWind(Math.round(weekDayObj.day.maxwind_kph))
                                     setCurrDate(format(parseISO(weekDayObj.date), "EEEE"))
                                     setCurrCond(weekDayObj.day.condition.text)
                                     setSelectedCard(index)
+
+                                    if (index !== 1 && document.getElementById('card-1').classList.contains('active')) {
+                                        document.getElementById('card-1').classList.remove('active')
+                                        document.getElementById('card-0').classList.add('active')
+                                    }
                                 }}
                                 className={selectedCard === index ? 'active' : null}
                             >

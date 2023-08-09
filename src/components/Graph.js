@@ -10,14 +10,20 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
 
     // only do ALL of the logic if you have the weatherData obj
     if (weatherData[0]) {
+        let arrOf24hr
 
-        // TODO: i only need 24 unless i've selected the current day which can seep thru to the next day, so put a condition that checks if selectedCard == 0
-        let arrOf48hr = weatherData[0].forecast.forecastday[selectedCard].hour.concat(weatherData[0].forecast.forecastday[selectedCard + 1].hour)
-        // 24 hours starting from current hour thru to the next day (that's why need 48hrs ^)
-        let currentHour = getHours(parseISO(weatherData[0].current.last_updated))
-        let start = currentHour
-        let end = currentHour + 24
-        let arrOf24hr = arrOf48hr.slice(start, end)
+        if (selectedCard == 0) {
+            // depending on the time weather is accessed for the current day, 24hrs can seep to the next day, 
+            // which is why we need to search to the next day, concat them, the slice out the future 24hrs
+            let arrOf48hr = weatherData[0].forecast.forecastday[selectedCard].hour.concat(weatherData[0].forecast.forecastday[selectedCard + 1].hour)
+            let currentHour = getHours(parseISO(weatherData[0].current.last_updated))
+            let start = currentHour
+            let end = currentHour + 24
+            arrOf24hr = arrOf48hr.slice(start, end)
+        } else {
+            arrOf24hr = weatherData[0].forecast.forecastday[selectedCard].hour
+        }
+
         let arrOf24hrTime = arrOf24hr.map((hour) => format((parseISO(hour.time)), "h aaaa"))
 
         const onClick = (event) => {
@@ -30,7 +36,7 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
 
                 arrOfSetStates[0](selectedHourObj.condition.icon)
                 arrOfSetStates[1](Math.round(selectedHourObj.temp_c))
-                arrOfSetStates[2](selectedHourObj.change_of_rain)
+                arrOfSetStates[2](selectedHourObj.chance_of_rain)
                 arrOfSetStates[3](selectedHourObj.humidity)
                 arrOfSetStates[4](Math.round(selectedHourObj.wind_kph))
                 let selectedDate = parseISO(selectedHourObj.time)
@@ -38,19 +44,27 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
                 arrOfSetStates[6](selectedHourObj.condition.text)
 
 
-                // not messing with setSelectedCard since state updates the graph,
-                // but I really want it to stay on the same graph, just apply 
-                // different styling to show that you've crossed over
-                let selectedDateWeekDay = format(selectedDate, "E")
-                let currentDayWeekDay = format(parseISO(weatherData[0].forecast.forecastday[0].date), "E")
-                if (selectedDateWeekDay !== currentDayWeekDay) {
-                    document.getElementById('card-0').classList.remove('active')
-                    document.getElementById('card-1').classList.add('active')
-                } else {
-                    document.getElementById('card-0').classList.add('active')
-                    document.getElementById('card-1').classList.remove('active')
+                if (selectedCard === 0) {
+                    // not messing with setSelectedCard since state updates the graph,
+                    // but I really want it to stay on the same graph, just apply 
+                    // different styling to show that you've crossed over to next day
+                    let selectedDateWeekDay = format(selectedDate, "E")
+                    let currentDayWeekDay = format(parseISO(weatherData[0].forecast.forecastday[0].date), "E")
+                    if (selectedDateWeekDay !== currentDayWeekDay) {
+                        document.getElementById('card-0').classList.remove('active')
+                        document.getElementById('card-1').classList.add('active')
+                    } else {
+                        document.getElementById('card-0').classList.add('active')
+                        document.getElementById('card-1').classList.remove('active')
+                    }
                 }
 
+
+                // TODO:
+                // 1. When I cross over to the next day, the click the original day card again, it doesn't update the weather info and doesn't apply styling. when i click on the card
+                // again I want it to do the thing that it did on load which I think can be achieved by setting the states
+                // 2. When I cross over and click another day, it doesn't remove the styling of the crossed over day
+                // 3. building on 1, when I click a card it doesn't update the weather info!
 
 
                 // [setCurrentImgSrc,
@@ -103,7 +117,7 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
                     // THIS LIBRARY IS SO AWFUL I WANT TO RUN INTO TRAFFIC
                     align: 'right',
                     anchor: 'center',
-                    offset: 0,
+                    offset: -5,
                     formatter: (value, context) => {
                         // Round the data value to 2 decimal places after it is displayed
                         return (context.dataIndex % 3 === 0) ? Math.round(value) : ''
