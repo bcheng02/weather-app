@@ -74,7 +74,7 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
                     borderColor: 'rgb(255,204,0)',
                     tension: 0.1,
                     datalabels: {
-                        color: 'rgba(0,0,0,0)'
+                        color: 'blue'
                     }
                 },
                 {
@@ -84,6 +84,13 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
                     backgroundColor: 'rgba(0,0,0,0)',
                     borderColor: 'rgba(0,0,0,0)',
                     tension: 0.1,
+                    datalabels: {
+                    }
+                },
+                {
+                    datalabels: {
+
+                    }
                 },
             ],
         }
@@ -106,20 +113,21 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
             },
             plugins: {
                 legend: {
-                    display: false, // Hide legend
+                    display: false,
                 },
                 datalabels: {
-                    // I've spent over 2 hours trying to push the labels to the top right and I CAN'T FIGURE IT OUT. I'VE TRIED EVERYTHING
-                    // THIS LIBRARY IS SO AWFUL I WANT TO RUN INTO TRAFFIC
                     align: 'right',
                     anchor: 'center',
                     offset: -5,
                     formatter: (value, context) => {
-                        // Round the data value to 2 decimal places after it is displayed
-                        return (context.dataIndex % 3 === 0) ? Math.round(value) : ''
+                        // show every third label, and scale it down to accomdate the raising data label trick
+                        return (context.dataIndex % 3 === 0) ? Math.round(value / 1.07) : ''
                     },
                     color: (context) => {
                         if (context.dataIndex === -1) return 'red'
+                    },
+                    font: {
+                        weight: 'bold'
                     }
                 },
             },
@@ -133,7 +141,6 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
                         display: false,
                         drawBorder: false
                     },
-                    // stacked: true,
 
                 },
                 x: {
@@ -153,11 +160,8 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
                         drawBorder: false,
                     },
                     border: {
-                        // HAHAHA IT ACTUALLY WORKED I FINALLY FOUND IT 
-                        // AFTER AN HOUR OF SEARCHING THIS LIBRARY SUCKS
                         color: 'white'
                     },
-                    // stacked: true,
                 }
             },
             maintainAspectRatio: false,
@@ -168,7 +172,7 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
         if (selectedTab === 0) {
             // set tab specific data
             let arrOf24hrTemp = arrOf24hr.map((hour) => hour.temp_c)
-            data.datasets[0].data = arrOf24hrTemp
+            data.datasets[0].data = arrOf24hrTemp.map(temp => temp)
 
             // scaled up as a trick to get higher data labels 
             // (hide old data labels, show new data labels, hide new graph)
@@ -181,7 +185,7 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
             let yMargin = yMax * 0.05
             options.scales.y.max = Math.round(yMax + yMargin)
             options.scales.y.min = Math.round(yMin - yMargin)
-            // options.scales.y.ticks.stepSize = 100
+            data.datasets[0].datalabels.color = 'rgba(0,0,0,0)'
             options.scales.y.ticks.beginAtZero = false
 
             return <Line
@@ -193,9 +197,54 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
             />;
 
         } else if (selectedTab === 1) {
-            let arrOf24hrPrecip = arrOf24hr.map((hour) => hour.chance_of_rain)
+            // example data since the API always says precip =
+            let arrOf24hr = []
+            for (let index = 0; index < 24; index++) {
+                arrOf24hr[index] = { chance_of_rain: 100 - index }
+            }
+
+
+            let arrOf24hrPrecip = arrOf24hr.map(hour => hour.chance_of_rain)
             data.datasets[0].data = arrOf24hrPrecip
-            data.datasets[1].data = []
+
+
+            options.barThickness = 30
+            data.datasets[0].backgroundColor = '#e8f0fe'
+            data.datasets[0].borderColor = '#1a73e8'
+            data.datasets[0].datalabels.color = 'rgba(0,0,0,0)'
+
+            // another data set that stack and then use that as a 'top border'
+            data.datasets[1].data = arrOf24hrPrecip.map(precip => precip * 1.05)
+
+            data.datasets[1].backgroundColor = '#1a73e8'
+            data.datasets[1].datalabels.color = 'rgba(0,0,0,0)'
+
+            // another data set to act as labels
+            data.datasets[2].data = arrOf24hrPrecip.map(precip => 100)
+            data.datasets[2].backgroundColor = 'rgba(0,0,0,0)'
+            options.plugins.datalabels.formatter = function (value, context) {
+                return (context.dataIndex % 3 === 0) ? (value) + '%' : ''
+            }
+            data.datasets[2].datalabels.color = '#1a73e8'
+
+
+
+            options.plugins.datalabels.anchor = 'end'
+            options.plugins.datalabels.align = 'start'
+            options.plugins.datalabels.offset = 15
+
+
+            options.scales.y.ticks.stepSize = 10
+            let yMargin = 5
+            options.scales.y.max = Math.round(100 + yMargin)
+            options.scales.y.min = Math.round(0 - yMargin)
+
+
+            options.scales.x.stacked = true
+            // options.scales.y.stacked = true
+
+
+
             console.log(arrOf24hrPrecip)
             return <Bar
                 data={data}
@@ -215,6 +264,12 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
                     },
                 ],
             };
+
+            return <Bar
+                data={data}
+                plugins={[ChartDataLabels]}
+                options={options}
+            />;
         }
 
 

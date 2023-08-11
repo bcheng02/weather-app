@@ -130,7 +130,7 @@ function WeatherCard() {
                         </span>
                     ))}
 
-                    <div id="chartContainer" style={{ width: 39 + "rem", height: 10 + "rem" }}>
+                    <div id="chartContainer" style={selectedTab === 1 ? { width: 41 + "rem", height: 10 + "rem" } : { width: 46 + "rem", height: 10 + "rem" }}>
                         <ChartComponent
                             weatherData={weatherData}
                             selectedTab={selectedTab}
