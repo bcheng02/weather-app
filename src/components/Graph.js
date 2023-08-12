@@ -197,13 +197,6 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
             />;
 
         } else if (selectedTab === 1) {
-            // example data since the API always says precip =
-            let arrOf24hr = []
-            for (let index = 0; index < 24; index++) {
-                arrOf24hr[index] = { chance_of_rain: 100 - index }
-            }
-
-
             let arrOf24hrPrecip = arrOf24hr.map(hour => hour.chance_of_rain)
             data.datasets[0].data = arrOf24hrPrecip
 
@@ -214,38 +207,33 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
             data.datasets[0].datalabels.color = 'rgba(0,0,0,0)'
 
             // another data set that stack and then use that as a 'top border'
-            data.datasets[1].data = arrOf24hrPrecip.map(precip => precip * 1.05)
+            data.datasets[1].data = arrOf24hrPrecip.map(precip => 2)
 
             data.datasets[1].backgroundColor = '#1a73e8'
             data.datasets[1].datalabels.color = 'rgba(0,0,0,0)'
 
             // another data set to act as labels
-            data.datasets[2].data = arrOf24hrPrecip.map(precip => 100)
+            data.datasets[2].data = arrOf24hrPrecip.map(precip => 100 - precip)
             data.datasets[2].backgroundColor = 'rgba(0,0,0,0)'
             options.plugins.datalabels.formatter = function (value, context) {
-                return (context.dataIndex % 3 === 0) ? (value) + '%' : ''
+                return (context.dataIndex % 3 === 0) ? (100 - value) + '%' : ''
             }
             data.datasets[2].datalabels.color = '#1a73e8'
 
 
-
             options.plugins.datalabels.anchor = 'end'
-            options.plugins.datalabels.align = 'start'
-            options.plugins.datalabels.offset = 15
+            options.plugins.datalabels.align = 'end'
+            options.plugins.datalabels.offset = 0
 
 
             options.scales.y.ticks.stepSize = 10
-            let yMargin = 5
+            let yMargin = 25
             options.scales.y.max = Math.round(100 + yMargin)
-            options.scales.y.min = Math.round(0 - yMargin)
-
 
             options.scales.x.stacked = true
-            // options.scales.y.stacked = true
+            options.scales.y.stacked = true
 
 
-
-            console.log(arrOf24hrPrecip)
             return <Bar
                 data={data}
                 plugins={[ChartDataLabels]}
