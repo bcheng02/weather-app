@@ -3,6 +3,7 @@ import { Chart as ChartJS } from 'chart.js/auto'
 import { Line, Chart, getElementAtEvent, Bar } from 'react-chartjs-2';
 import { format, getHours, parseISO } from 'date-fns';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import arrow from '../images/up-arrow.svg'
 
 const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates }) => {
     // Create a ref to the chart
@@ -68,18 +69,18 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
             datasets: [
                 {
                     label: "placeholder label",
-                    data: [65, 59, 80, 81, 56, 55, 40],
+                    data: [],
                     fill: true,
                     backgroundColor: 'rgb(255, 245, 204)',
                     borderColor: 'rgb(255,204,0)',
                     tension: 0.1,
                     datalabels: {
-                        color: 'blue'
+                        color: '#202124'
                     }
                 },
                 {
                     label: "placeholder label",
-                    data: [65, 59, 80, 81, 56, 55, 24],
+                    data: [],
                     fill: true,
                     backgroundColor: 'rgba(0,0,0,0)',
                     borderColor: 'rgba(0,0,0,0)',
@@ -101,6 +102,7 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
                 point: {
                     pointStyle: 'rect',
                     borderWidth: 0,
+                    pointBorderColor: 'rgba(0,0,0,0)',
                     pointBackgroundColor: 'rgba(0,0,0,0)',
                     radius: (context) => {
                         return (context.dataIndex % 3 === 0) ? 40 : 0
@@ -120,8 +122,7 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
                     anchor: 'center',
                     offset: -5,
                     formatter: (value, context) => {
-                        // show every third label, and scale it down to accomdate the raising data label trick
-                        return (context.dataIndex % 3 === 0) ? Math.round(value / 1.07) : ''
+                        return value
                     },
                     color: (context) => {
                         if (context.dataIndex === -1) return 'red'
@@ -178,6 +179,12 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
             // (hide old data labels, show new data labels, hide new graph)
             data.datasets[1].data = arrOf24hrTemp.map(temp => temp * 1.07)
 
+
+            options.plugins.datalabels.formatter = function (value, context) {
+                return (context.dataIndex % 3 === 0) ? Math.round(value / 1.07) : ''
+            }
+
+            data.datasets[0].borderWidth = 2
 
             // config
             let yMax = Math.max(...arrOf24hrTemp)
@@ -240,37 +247,36 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
                 options={options}
             />;
         } else {
-            data = {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-                datasets: [
-                    {
-                        label: 'third tab',
-                        data: [85, 59, 80, 81, 56, 55, 40],
-                        fill: false,
-                        borderColor: 'rgb(75, 192, 192)',
-                        tension: 0.1,
-                    },
-                ],
-            };
+            let arrOf24hrWind = arrOf24hr.filter((_, index) => index % 3 == 0)
+            console.log(arrOf24hrWind)
 
-            return <Bar
-                data={data}
-                plugins={[ChartDataLabels]}
-                options={options}
-            />;
+            return (
+                <>
+                    <div style={{ position: 'absolute' }}>
+                        {arrOf24hrWind.map((hour, index) => (
+                            <span key={'wind' + index}>
+                                {Math.round(hour.wind_kph) + " km/hr "}
+                                <div>
+                                    <img
+                                        src={arrow}
+                                        alt='an arrow describing the wind direction'
+                                        width={25 + 'rem'}
+                                        style={{ transform: `rotate(${hour.wind_degree}deg)` }}
+                                    />
+                                </div>
+                            </span>
+                        ))}
+                    </div>
+
+
+                    <Line
+                        data={data}
+                        options={options}
+                    />
+                </>
+
+            )
         }
-
-
-
-
-
-        return <Line
-            data={data}
-            plugins={[ChartDataLabels]}
-            options={options}
-            ref={chartRef} // Add the ref here
-            onClick={onClick}
-        />;
     }
 };
 
