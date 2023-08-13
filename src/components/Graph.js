@@ -27,42 +27,6 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
 
         let arrOf24hrTime = arrOf24hr.map((hour) => format((parseISO(hour.time)), "h aaaa"))
 
-        const onClick = (event) => {
-            if (selectedTab === 0) {
-                let element = getElementAtEvent(chartRef.current, event)
-
-                // it's a vaid data point if getElementAtEvent returns a non-empty array
-                let isDataPoint = element.length !== 0
-                if (isDataPoint) {
-                    let selectedHourObj = arrOf24hr[element[0].index]
-
-                    arrOfSetStates[0](selectedHourObj.condition.icon)
-                    arrOfSetStates[1](Math.round(selectedHourObj.temp_c))
-                    arrOfSetStates[2](selectedHourObj.chance_of_rain)
-                    arrOfSetStates[3](selectedHourObj.humidity)
-                    arrOfSetStates[4](Math.round(selectedHourObj.wind_kph))
-                    let selectedDate = parseISO(selectedHourObj.time)
-                    arrOfSetStates[5](format(selectedDate, "EEEE h:00 aaaa"))
-                    arrOfSetStates[6](selectedHourObj.condition.text)
-
-
-                    if (selectedCard === 0) {
-                        // not messing with setSelectedCard since state updates the graph,
-                        // but I really want it to stay on the same graph, just apply 
-                        // different styling to show that you've crossed over to next day
-                        let selectedDateWeekDay = format(selectedDate, "E")
-                        let currentDayWeekDay = format(parseISO(weatherData[0].forecast.forecastday[0].date), "E")
-                        if (selectedDateWeekDay !== currentDayWeekDay) {
-                            document.getElementById('card-0').classList.remove('active')
-                            document.getElementById('card-1').classList.add('active')
-                        } else {
-                            document.getElementById('card-0').classList.add('active')
-                            document.getElementById('card-1').classList.remove('active')
-                        }
-                    }
-                }
-            }
-        }
 
         let data = {
             labels: arrOf24hrTime,
@@ -195,6 +159,43 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
             data.datasets[0].datalabels.color = 'rgba(0,0,0,0)'
             options.scales.y.ticks.beginAtZero = false
 
+            const onClick = (event) => {
+                if (selectedTab === 0) {
+                    let element = getElementAtEvent(chartRef.current, event)
+
+                    // it's a vaid data point if getElementAtEvent returns a non-empty array
+                    let isDataPoint = element.length !== 0
+                    if (isDataPoint) {
+                        let selectedHourObj = arrOf24hr[element[0].index]
+
+                        arrOfSetStates[0](selectedHourObj.condition.icon)
+                        arrOfSetStates[1](Math.round(selectedHourObj.temp_c))
+                        arrOfSetStates[2](selectedHourObj.chance_of_rain)
+                        arrOfSetStates[3](selectedHourObj.humidity)
+                        arrOfSetStates[4](Math.round(selectedHourObj.wind_kph))
+                        let selectedDate = parseISO(selectedHourObj.time)
+                        arrOfSetStates[5](format(selectedDate, "EEEE h:00 aaaa"))
+                        arrOfSetStates[6](selectedHourObj.condition.text)
+
+
+                        if (selectedCard === 0) {
+                            // not messing with setSelectedCard since state updates the graph,
+                            // but I really want it to stay on the same graph, just apply 
+                            // different styling to show that you've crossed over to next day
+                            let selectedDateWeekDay = format(selectedDate, "E")
+                            let currentDayWeekDay = format(parseISO(weatherData[0].forecast.forecastday[0].date), "E")
+                            if (selectedDateWeekDay !== currentDayWeekDay) {
+                                document.getElementById('card-0').classList.remove('active')
+                                document.getElementById('card-1').classList.add('active')
+                            } else {
+                                document.getElementById('card-0').classList.add('active')
+                                document.getElementById('card-1').classList.remove('active')
+                            }
+                        }
+                    }
+                }
+            }
+
             return <Line
                 data={data}
                 plugins={[ChartDataLabels]}
@@ -231,15 +232,11 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
             options.plugins.datalabels.anchor = 'end'
             options.plugins.datalabels.align = 'end'
             options.plugins.datalabels.offset = 0
-
-
             options.scales.y.ticks.stepSize = 10
             let yMargin = 25
             options.scales.y.max = Math.round(100 + yMargin)
-
             options.scales.x.stacked = true
             options.scales.y.stacked = true
-
 
             return <Bar
                 data={data}
@@ -249,22 +246,23 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
         } else {
             let arrOf24hrWind = arrOf24hr.filter((_, index) => index % 3 == 0)
             console.log(arrOf24hrWind)
+            console.log(arrOf24hrWind.map(hour => hour.wind_degree))
 
             return (
                 <>
-                    <div style={{ position: 'absolute' }}>
+                    <div style={{ position: 'absolute', display: 'flex' }}>
                         {arrOf24hrWind.map((hour, index) => (
-                            <span key={'wind' + index}>
+                            <div key={'wind' + index}>
                                 {Math.round(hour.wind_kph) + " km/hr "}
                                 <div>
                                     <img
                                         src={arrow}
                                         alt='an arrow describing the wind direction'
-                                        width={25 + 'rem'}
-                                        style={{ transform: `rotate(${hour.wind_degree}deg)` }}
+                                        width={30 + 'rem'}
+                                        style={{ transform: `rotate(${hour.wind_degree + 180}deg)` }}
                                     />
                                 </div>
-                            </span>
+                            </div>
                         ))}
                     </div>
 
