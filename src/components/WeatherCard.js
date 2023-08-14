@@ -36,7 +36,6 @@ function WeatherCard() {
 
 
 
-    // TODO: why break when this is state
     let data
 
 
@@ -83,11 +82,15 @@ function WeatherCard() {
 
     return (
         <>
-            <div id="top">
-                <img id="logo" src={logo} alt="the word 'weather' in the style of the Google logo"></img>
-                <SearchBar onClickSearch={handleSearch} />
+            <div id="top" >
+                <div id="logoAndSearch">
+                    <img id="logo" src={logo} alt="the word 'weather' in the style of the Google logo"></img>
+                    <SearchBar onClickSearch={handleSearch} />
+                </div>
                 <Navbar />
+
             </div>
+
 
 
             <div id="weatherCard">

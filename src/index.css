@@ -3,9 +3,15 @@
   src: url('fonts/Product\ Sans\ Regular.ttf');
 }
 
-body {
+*,
+::before,
+::after {
+  box-sizing: border-box;
   margin: 0;
-  font-family: 'Product-sans', Arial, Helvetica, sans-serif;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -17,4 +23,46 @@ code {
 
 .active {
   background-color: palegreen;
+}
+
+#logoAndSearch {
+  /* border: 10px solid red;
+  background-color: pink; */
+  display: flex;
+
+
+}
+
+#logo {
+  width: 8rem;
+}
+
+
+
+#search,
+#beforeSearch {
+  border-left: none;
+  border: 1px solid transparent;
+  box-shadow: 0 2px 5px 1px rgba(64, 60, 67, .16);
+  border-radius: 0px 24px 24px 0px;
+  font-size: 14px;
+}
+
+#search {
+  clip-path: inset(-6px -6px -6px 0px);
+}
+
+#beforeSearch {
+  border-radius: 24px 0px 0px 24px;
+  clip-path: inset(-6px 0px -6px -6px);
+  width: 4.9rem;
+  color: black;
+
+}
+
+
+#resultsAndTime,
+#Navbar {
+  font-family: 'Product-sans', Arial, Helvetica, sans-serif;
+
 }

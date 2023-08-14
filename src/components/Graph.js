@@ -245,27 +245,29 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
             />;
         } else {
             let arrOf24hrWind = arrOf24hr.filter((_, index) => index % 3 == 0)
-            console.log(arrOf24hrWind)
-            console.log(arrOf24hrWind.map(hour => hour.wind_degree))
 
             return (
                 <>
                     <div style={{ position: 'absolute', display: 'flex' }}>
                         {arrOf24hrWind.map((hour, index) => (
-                            <div key={'wind' + index}>
+                            <div key={'wind' + index} id={'wind' + index}>
                                 {Math.round(hour.wind_kph) + " km/hr "}
                                 <div>
                                     <img
                                         src={arrow}
+                                        id={'arrow' + index}
                                         alt='an arrow describing the wind direction'
-                                        width={30 + 'rem'}
-                                        style={{ transform: `rotate(${hour.wind_degree + 180}deg)` }}
+                                        width={16 + 'rem'}
+                                        style={{
+                                            transform: `rotate(${hour.wind_degree + 180}deg)`,
+                                            width: Math.min(Math.max(16, hour.wind_kph * 1.5), 24) + 'px'
+                                        }}
                                     />
                                 </div>
+
                             </div>
                         ))}
                     </div>
-
 
                     <Line
                         data={data}

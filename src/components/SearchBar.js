@@ -8,7 +8,13 @@ function SearchBar({ onClickSearch }) {
 
     return (
         <div id="SearchBar">
-            <span>Weather in </span>
+            <input
+                id="beforeSearch"
+                type="text"
+                value={" weather in"}
+                readOnly={true}
+                disabled={true}
+            />
             <input
                 id="search"
                 type="text"
