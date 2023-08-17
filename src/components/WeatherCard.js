@@ -57,7 +57,7 @@ function WeatherCard() {
         let currentHourObj = data[0].forecast.forecastday[0].hour[currentHour]
 
         setResultsAndTime(data[1])
-        setCurrentImgSrc(data[0].current.condition.icon)
+        setCurrentImgSrc('https:' + data[0].current.condition.icon)
 
 
         // no setCurrentTemp(currentHourObj.temp_c), this is more accurate
@@ -70,14 +70,14 @@ function WeatherCard() {
         setCurrCond(data[0].current.condition.text)
         setCurrDate(format(currentDate, "EEEE h:00 aaaa"))
 
-        setCardImg0(data[0].forecast.forecastday[0].day.condition.icon)
-        setCardImg1(data[0].forecast.forecastday[1].day.condition.icon)
-        setCardImg2(data[0].forecast.forecastday[2].day.condition.icon)
-        setCardImg3(data[0].forecast.forecastday[3].day.condition.icon)
-        setCardImg4(data[0].forecast.forecastday[4].day.condition.icon)
-        setCardImg5(data[0].forecast.forecastday[5].day.condition.icon)
-        setCardImg6(data[0].forecast.forecastday[6].day.condition.icon)
-        setCardImg7(data[0].forecast.forecastday[7].day.condition.icon)
+        setCardImg0('https:' + data[0].forecast.forecastday[0].day.condition.icon)
+        setCardImg1('https:' + data[0].forecast.forecastday[1].day.condition.icon)
+        setCardImg2('https:' + data[0].forecast.forecastday[2].day.condition.icon)
+        setCardImg3('https:' + data[0].forecast.forecastday[3].day.condition.icon)
+        setCardImg4('https:' + data[0].forecast.forecastday[4].day.condition.icon)
+        setCardImg5('https:' + data[0].forecast.forecastday[5].day.condition.icon)
+        setCardImg6('https:' + data[0].forecast.forecastday[6].day.condition.icon)
+        setCardImg7('https:' + data[0].forecast.forecastday[7].day.condition.icon)
     }
 
     return (
