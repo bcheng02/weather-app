@@ -25,9 +25,13 @@ function SearchBar({ onClickSearch }) {
                     onChange={(e) => {
                         setSearchTerm(e.target.value)
                         console.log("a change in search term")
-                    }
-
-                    }
+                    }}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            onClickSearch(searchTerm)
+                            console.log('enter pressed')
+                        }
+                    }}
                 />
             </div>
 
@@ -39,7 +43,7 @@ function SearchBar({ onClickSearch }) {
                         console.log('x btn clicked')
                     }}
                 >
-                    <img src={xIcon} id="xIcon"></img>
+                    <img src={xIcon} id="xIcon" alt="an x shaped icon"></img>
 
                 </div>
                 <span id="btnBorder"></span>
@@ -52,7 +56,7 @@ function SearchBar({ onClickSearch }) {
                         console.log("search btn clicked" + searchTerm)
                     }}
                 >
-                    <img src={searchIcon} id="searchIcon"></img>
+                    <img src={searchIcon} id="searchIcon" alt="an icon shaped as a magnifying glass"></img>
                 </div>
             </div>
 

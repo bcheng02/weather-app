@@ -68,7 +68,7 @@ code {
 
 
 #search {
-  /* flex: 1; */
+  flex: 1;
 }
 
 #search:focus-visible {
