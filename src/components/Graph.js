@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { Chart as ChartJS } from 'chart.js/auto'
-import { Line, Chart, getElementAtEvent, Bar } from 'react-chartjs-2';
+import { Line, getElementAtEvent, Bar } from 'react-chartjs-2';
 import { format, getHours, parseISO } from 'date-fns';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import arrow from '../images/up-arrow.svg'
@@ -13,7 +13,7 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
     if (weatherData[0]) {
         let arrOf24hr
 
-        if (selectedCard == 0) {
+        if (selectedCard === 0) {
             // depending on the time weather is accessed for the current day, 24hrs can seep to the next day, 
             // which is why we need to search to the next day, concat them, the slice out the future 24hrs
             let arrOf48hr = weatherData[0].forecast.forecastday[selectedCard].hour.concat(weatherData[0].forecast.forecastday[selectedCard + 1].hour)
@@ -137,12 +137,11 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
         if (selectedTab === 0) {
             // set tab specific data
             let arrOf24hrTemp = arrOf24hr.map((hour) => hour.temp_c)
-            data.datasets[0].data = arrOf24hrTemp.map(temp => temp)
+            data.datasets[0].data = arrOf24hrTemp
 
             // scaled up as a trick to get higher data labels 
             // (hide old data labels, show new data labels, hide new graph)
             data.datasets[1].data = arrOf24hrTemp.map(temp => temp * 1.07)
-
 
             options.plugins.datalabels.formatter = function (value, context) {
                 return (context.dataIndex % 3 === 0) ? Math.round(value / 1.07) : ''
@@ -204,7 +203,8 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
                 onClick={onClick}
             />;
 
-        } else if (selectedTab === 1) {
+        }
+        else if (selectedTab === 1) {
             let arrOf24hrPrecip = arrOf24hr.map(hour => hour.chance_of_rain)
             data.datasets[0].data = arrOf24hrPrecip
 
@@ -244,7 +244,7 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
                 options={options}
             />;
         } else {
-            let arrOf24hrWind = arrOf24hr.filter((_, index) => index % 3 == 0)
+            let arrOf24hrWind = arrOf24hr.filter((_, index) => index % 3 === 0)
 
             return (
                 <>
