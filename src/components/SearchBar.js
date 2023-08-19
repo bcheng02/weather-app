@@ -2,9 +2,7 @@ import { useState } from "react"
 import xIcon from '../images/close-icon.svg'
 import searchIcon from '../images/search-icon.svg'
 
-function SearchBar({ onClickSearch }) {
-    let [searchTerm, setSearchTerm] = useState('Vancouver')
-
+function SearchBar({ searchTerm, setSearchTerm, onClickSearch }) {
 
     return (
 
@@ -50,7 +48,6 @@ function SearchBar({ onClickSearch }) {
 
                 <div
                     id="searchBtn"
-                    // type="button"
                     onClick={() => {
                         onClickSearch(searchTerm)
                         console.log("search btn clicked" + searchTerm)

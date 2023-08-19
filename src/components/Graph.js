@@ -141,10 +141,11 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
 
             // scaled up as a trick to get higher data labels 
             // (hide old data labels, show new data labels, hide new graph)
-            data.datasets[1].data = arrOf24hrTemp.map(temp => temp * 1.07)
+            const SCALE = 1.07
+            data.datasets[1].data = arrOf24hrTemp.map(temp => temp * SCALE)
 
             options.plugins.datalabels.formatter = function (value, context) {
-                return (context.dataIndex % 3 === 0) ? Math.round(value / 1.07) : ''
+                return (context.dataIndex % 3 === 0) ? Math.round(value / SCALE) : ''
             }
 
             data.datasets[0].borderWidth = 2

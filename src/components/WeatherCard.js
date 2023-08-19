@@ -9,6 +9,8 @@ import ChartComponent from "./Graph"
 
 
 function WeatherCard() {
+    let [searchTerm, setSearchTerm] = useState('Vancouver')
+
     const tabs = ["Temperature", "Precipitation", "Wind"]
     let [weatherData, setWeatherData] = useState([])
     let [resultsAndTime, setResultsAndTime] = useState("123 results in 321 sec")
@@ -41,12 +43,12 @@ function WeatherCard() {
 
     // TODO: see why the fcn calls twice on page load
     useEffect(() => {
-        handleSearch('Vancouver')
+        handleSearch(searchTerm)
     }, [])
 
-    async function handleSearch(userLocation) {
+    async function handleSearch() {
         try {
-            data = await getWeather(userLocation)
+            data = await getWeather(searchTerm)
             setWeatherData(data)
         } catch (error) {
             throw error
@@ -85,9 +87,9 @@ function WeatherCard() {
             <div id="top" >
                 <div id="logoAndSearch">
                     <img id="logo" src={logo} alt="the word 'weather' in the style of the Google logo"></img>
-                    <SearchBar onClickSearch={handleSearch} />
+                    <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} onClickSearch={handleSearch} />
                 </div>
-                <Navbar />
+                <Navbar searchTerm={searchTerm} />
 
             </div>
 

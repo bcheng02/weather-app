@@ -25,17 +25,20 @@ code {
   background-color: palegreen;
 }
 
-#logoAndSearch {
-  /* border: 10px solid red;
-  background-color: pink; */
-  display: flex;
-  margin: 25px 15px;
+/* TOP SECTION */
 
+#top {
+  border-bottom: 1px solid #dadce0;
 
 }
 
+#logoAndSearch {
+  display: flex;
+  margin: 25px 15px 14px 15px;
+}
+
 #logo {
-  width: 6rem;
+  width: 7rem;
 }
 
 #searchBar {
@@ -64,6 +67,7 @@ code {
 #beforeSearch {
   font-size: 14px;
   border: none;
+  border-radius: 24px;
 }
 
 
@@ -100,7 +104,7 @@ code {
 
 #xIcon,
 #searchIcon {
-  max-width: 40%;
+  max-width: 45%;
   cursor: pointer;
 }
 
@@ -113,5 +117,36 @@ code {
 #resultsAndTime,
 #Navbar {
   font-family: 'Product-sans', Arial, Helvetica, sans-serif;
+}
 
+/* NAV BAR */
+#Navbar {
+  display: flex;
+  gap: 6px;
+  margin: 0 0 16px max(170px, 5vw);
+}
+
+
+
+.navbarLinkContainer {
+  cursor: pointer;
+  border-radius: 20px;
+  border: 1px solid #dadce0;
+  width: fit-content;
+  height: 40px;
+  padding: 0px 15px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbarLinkContainer:hover {
+  background-color: #f1f3f4;
+}
+
+.navbarLink {
+  color: #202124;
+  text-decoration: none;
+  font-size: 14px;
 }
