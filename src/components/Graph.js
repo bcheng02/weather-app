@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Chart as ChartJS } from 'chart.js/auto'
 import { Line, getElementAtEvent, Bar } from 'react-chartjs-2';
 import { format, getHours, parseISO } from 'date-fns';
@@ -6,6 +6,9 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import arrow from '../images/up-arrow.svg'
 
 const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates }) => {
+    let newArrOfColors = (Array(24).fill('#b5b5b5'))
+    let [arrOfColors, setArrOfColors] = useState(newArrOfColors)
+
     // Create a ref to the chart
     const chartRef = useRef();
 
@@ -39,7 +42,7 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
                     borderColor: 'rgb(255,204,0)',
                     tension: 0.1,
                     datalabels: {
-                        color: '#202124'
+                        color: 'black'
                     }
                 },
                 {
@@ -60,6 +63,9 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
             ],
         }
         let options = {
+            animation: {
+                duration: 0
+            },
             events: [],
             hover: { mode: null },
             elements: {
@@ -89,7 +95,7 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
                         return value
                     },
                     color: (context) => {
-                        if (context.dataIndex === -1) return 'red'
+                        if (context.dataIndex === 3) return '#202124'
                     },
                     font: {
                         weight: 'bold'
@@ -132,7 +138,47 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
             maintainAspectRatio: false,
         };
 
+        const onClick = (event) => {
+            let element = getElementAtEvent(chartRef.current, event)
 
+
+            // it's a vaid data point if getElementAtEvent returns a non-empty array
+            let isDataPoint = element.length !== 0
+            if (isDataPoint) {
+
+                newArrOfColors.map(color => '#b5b5b5')
+                newArrOfColors[element[0].index] = '#555555'
+                setArrOfColors(newArrOfColors)
+
+                let selectedHourObj = arrOf24hr[element[0].index]
+
+                arrOfSetStates[0](selectedHourObj.condition.icon)
+                arrOfSetStates[1](Math.round(selectedHourObj.temp_c))
+                arrOfSetStates[2](selectedHourObj.chance_of_rain)
+                arrOfSetStates[3](selectedHourObj.humidity)
+                arrOfSetStates[4](Math.round(selectedHourObj.wind_kph))
+                let selectedDate = parseISO(selectedHourObj.time)
+                arrOfSetStates[5](format(selectedDate, "EEEE h:00 aaaa"))
+                arrOfSetStates[6](selectedHourObj.condition.text)
+
+
+                if (selectedCard === 0) {
+                    // not messing with setSelectedCard since state updates the graph,
+                    // but I really want it to stay on the same graph, just apply 
+                    // different styling to show that you've crossed over to next day
+                    let selectedDateWeekDay = format(selectedDate, "E")
+                    let currentDayWeekDay = format(parseISO(weatherData[0].forecast.forecastday[0].date), "E")
+                    if (selectedDateWeekDay !== currentDayWeekDay) {
+                        document.getElementById('card-0').classList.remove('active')
+                        document.getElementById('card-1').classList.add('active')
+                    } else {
+                        document.getElementById('card-0').classList.add('active')
+                        document.getElementById('card-1').classList.remove('active')
+                    }
+                }
+            }
+
+        }
 
         if (selectedTab === 0) {
             // set tab specific data
@@ -141,7 +187,7 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
 
             // scaled up as a trick to get higher data labels 
             // (hide old data labels, show new data labels, hide new graph)
-            const SCALE = 1.07
+            const SCALE = 1.11
             data.datasets[1].data = arrOf24hrTemp.map(temp => temp * SCALE)
 
             options.plugins.datalabels.formatter = function (value, context) {
@@ -157,44 +203,13 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
             options.scales.y.max = Math.round(yMax + yMargin)
             options.scales.y.min = Math.round(yMin - yMargin)
             data.datasets[0].datalabels.color = 'rgba(0,0,0,0)'
+
+            data.datasets[1].datalabels.color = arrOfColors
+
+
             options.scales.y.ticks.beginAtZero = false
 
-            const onClick = (event) => {
-                if (selectedTab === 0) {
-                    let element = getElementAtEvent(chartRef.current, event)
 
-                    // it's a vaid data point if getElementAtEvent returns a non-empty array
-                    let isDataPoint = element.length !== 0
-                    if (isDataPoint) {
-                        let selectedHourObj = arrOf24hr[element[0].index]
-
-                        arrOfSetStates[0](selectedHourObj.condition.icon)
-                        arrOfSetStates[1](Math.round(selectedHourObj.temp_c))
-                        arrOfSetStates[2](selectedHourObj.chance_of_rain)
-                        arrOfSetStates[3](selectedHourObj.humidity)
-                        arrOfSetStates[4](Math.round(selectedHourObj.wind_kph))
-                        let selectedDate = parseISO(selectedHourObj.time)
-                        arrOfSetStates[5](format(selectedDate, "EEEE h:00 aaaa"))
-                        arrOfSetStates[6](selectedHourObj.condition.text)
-
-
-                        if (selectedCard === 0) {
-                            // not messing with setSelectedCard since state updates the graph,
-                            // but I really want it to stay on the same graph, just apply 
-                            // different styling to show that you've crossed over to next day
-                            let selectedDateWeekDay = format(selectedDate, "E")
-                            let currentDayWeekDay = format(parseISO(weatherData[0].forecast.forecastday[0].date), "E")
-                            if (selectedDateWeekDay !== currentDayWeekDay) {
-                                document.getElementById('card-0').classList.remove('active')
-                                document.getElementById('card-1').classList.add('active')
-                            } else {
-                                document.getElementById('card-0').classList.add('active')
-                                document.getElementById('card-1').classList.remove('active')
-                            }
-                        }
-                    }
-                }
-            }
 
             return <Line
                 data={data}
