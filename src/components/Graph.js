@@ -217,6 +217,7 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
                 options={options}
                 ref={chartRef} // Add the ref here
                 onClick={onClick}
+                style={{ cursor: 'pointer' }}
             />;
 
         }
