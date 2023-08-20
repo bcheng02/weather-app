@@ -29,7 +29,7 @@ code {
 
 #top {
   border-bottom: 1px solid #dadce0;
-
+  padding-left: 2vw;
 }
 
 #logoAndSearch {
@@ -44,7 +44,7 @@ code {
 #searchBar {
   display: flex;
   justify-content: space-between;
-  width: min(55vw, 690px);
+  width: min(45vw, 690px);
   height: 46px;
   border-radius: 24px;
   border: 1px solid transparent;
@@ -123,7 +123,18 @@ code {
 #Navbar {
   display: flex;
   gap: 6px;
-  margin: 0 0 16px max(170px, 5vw);
+  margin: 0 0 16px 170px;
+
+}
+
+@media only screen and (max-width: 1280px) {
+  #top {
+    padding-left: 5vw;
+  }
+
+  #Navbar {
+    margin-left: 15px;
+  }
 }
 
 
