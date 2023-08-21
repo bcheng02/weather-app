@@ -21,15 +21,11 @@ code {
     monospace;
 }
 
-.active {
-  background-color: palegreen;
-}
-
 /* TOP SECTION */
 
 #top {
   border-bottom: 1px solid #dadce0;
-  padding-left: 2vw;
+  padding: 0 0 3px 2vw;
 }
 
 #logoAndSearch {
@@ -129,7 +125,7 @@ code {
 
 @media only screen and (max-width: 1280px) {
   #top {
-    padding-left: 5vw;
+    /* padding-left: 5vw; */
   }
 
   #Navbar {
@@ -160,14 +156,67 @@ code {
   font-size: 14px;
 }
 
+
+/* WEATHER CARD */
+
+#weatherCard {
+  margin-left: 210px;
+  width: 652px;
+}
+
+
 #resultsAndTime {
   color: #70757a;
-  margin: 10px 0 0 210px;
+  margin: 10px 0 25px 0;
   font-size: 14px;
 }
 
 @media only screen and (max-width: 1280px) {
-  #resultsAndTime {
+  #weatherCard {
     margin-left: 60px;
   }
+}
+
+#mainInfo {
+  display: flex;
+  justify-content: space-between;
+}
+
+#leftInfo {
+  display: flex;
+}
+
+.tab.active {
+  border-bottom: 3px solid #fbbc04;
+}
+
+
+
+
+
+
+
+
+/* WEEK FORECAST */
+
+#weekForecast {
+  display: flex;
+  gap: 18px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 95px;
+  width: 75px;
+}
+
+.card>img {
+  /* width: 50%; */
+}
+
+.card.active {
+  background-color: #f8f9fa;
+  border-radius: 10px;
 }
