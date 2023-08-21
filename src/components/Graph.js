@@ -6,11 +6,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import arrow from '../images/up-arrow.svg'
 import { celToFar, kmhToMph, } from '../utils/unitConversion';
 
-const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates, isImperial }) => {
-    let newArrOfColors = (Array(24).fill('#b5b5b5'))
-    newArrOfColors[0] = '#555555'
-    let [arrOfColors, setArrOfColors] = useState(newArrOfColors)
-
+const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates, isImperial, arrOfColors, setArrOfColors }) => {
     // Create a ref to the chart
     const chartRef = useRef();
 
@@ -147,9 +143,7 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
             // it's a vaid data point if getElementAtEvent returns a non-empty array
             let isDataPoint = element.length !== 0
             if (isDataPoint) {
-                console.log(newArrOfColors)
-                newArrOfColors = newArrOfColors.map(color => '#b5b5b5')
-                console.log(newArrOfColors)
+                let newArrOfColors = (Array(24).fill('#b5b5b5'))
                 newArrOfColors[element[0].index] = '#555555'
                 setArrOfColors(newArrOfColors)
 
@@ -157,7 +151,6 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
 
                 arrOfSetStates[0](selectedHourObj.condition.icon)
                 arrOfSetStates[1](Math.round(selectedHourObj.temp_c))
-                console.log(isImperial)
                 arrOfSetStates[2](selectedHourObj.chance_of_rain)
                 arrOfSetStates[3](selectedHourObj.humidity)
                 arrOfSetStates[4](Math.round(selectedHourObj.wind_kph))

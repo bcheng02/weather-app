@@ -40,6 +40,10 @@ function WeatherCard() {
     let [selectedCard, setSelectedCard] = useState(0)
     let [selectedTab, setSelectedTab] = useState(0)
 
+    let newArrOfColors = (Array(24).fill('#b5b5b5'))
+    newArrOfColors[0] = '#555555'
+    let [arrOfColors, setArrOfColors] = useState(newArrOfColors)
+
 
     let data
 
@@ -141,6 +145,7 @@ function WeatherCard() {
                 <div id="graphContainer">
                     {tabs.map((tab, index) => (
                         <span
+                            id={tab}
                             key={tab}
                             onClick={() => {
                                 setSelectedTab(index)
@@ -167,7 +172,8 @@ function WeatherCard() {
                                 setSelectedCard,
                             ]}
                             isImperial={isImperial}
-
+                            arrOfColors={arrOfColors}
+                            setArrOfColors={setArrOfColors}
                         />
 
                     </div>
@@ -192,6 +198,8 @@ function WeatherCard() {
 
                                     document.querySelectorAll('.card').forEach(card => card.classList.remove('active'))
                                     document.getElementById('card-' + index).classList.add('active')
+
+                                    setArrOfColors(Array(24).fill('#b5b5b5'))
                                 }}
                                 className={selectedCard === index ? 'active card' : 'card'}
                             >
