@@ -1,11 +1,15 @@
 import { useState, useEffect } from "react"
 import getWeather from "../utils/weatherApi"
+import { celToFar, kmhToMph } from "../utils/unitConversion"
 import SearchBar from "./SearchBar"
 import Navbar from "./Navbar"
 import logo from '../images/weather-logo.svg'
 import { format, getHours, parseISO } from "date-fns"
 
 import ChartComponent from "./Graph"
+
+
+
 
 
 function WeatherCard() {
@@ -15,6 +19,7 @@ function WeatherCard() {
     let [weatherData, setWeatherData] = useState([])
     let [resultsAndTime, setResultsAndTime] = useState("123 results in 321 sec")
 
+    let [isImperial, setisImperial] = useState(false)
     let [currentImgSrc, setCurrentImgSrc] = useState('')
     let [currentTemp, setCurrentTemp] = useState('12345')
     let [precip, setPrecip] = useState('placeholder for precip')
@@ -34,8 +39,6 @@ function WeatherCard() {
 
     let [selectedCard, setSelectedCard] = useState(0)
     let [selectedTab, setSelectedTab] = useState(0)
-    // TODO: unsure about this one, only possible if can change the style
-
 
 
     let data
@@ -63,7 +66,7 @@ function WeatherCard() {
 
 
         // no setCurrentTemp(currentHourObj.temp_c), this is more accurate
-        setCurrentTemp(Math.round(data[0].current.temp_c))
+        setCurrentTemp(data[0].current.temp_c)
 
 
         setPrecip(currentHourObj.chance_of_rain)
@@ -103,15 +106,29 @@ function WeatherCard() {
                 <div>
                     <span><img id="currentImg" src={currentImgSrc} alt="an icon for the current weather"></img></span>
 
-                    <span id="currentTemp" className="unit_temp">{currentTemp}</span>
+                    <span id="currentTemp" className="unit_temp">{Math.round(celToFar(currentTemp, isImperial))}</span>
 
-                    <span>°C </span> | <span>°F</span>
+                    <span
+                        id="celciusTab"
+                        onClick={() => setisImperial(false)}
+                        style={
+                            isImperial ? { color: 'grey' } : { color: 'black' }
+                        }
+                    >°C
+                    </span>
+                    <span>|</span>
+                    <span
+                        id="farenheitTab"
+                        onClick={() => setisImperial(true)}
+                        style={isImperial ? { color: 'black' } : { color: 'grey' }}
+                    >°F
+                    </span>
 
 
                     <span>
                         <div id="precip" className="unit_precip">Precipitation: {precip}%</div>
                         <div id="humidity" className="unit_humidity">Humidity: {humidity}%</div>
-                        <div id="wind" className="unit_wind">Wind: {wind} km/h</div>
+                        <div id="wind" className="unit_wind">Wind: {Math.round(kmhToMph(wind, isImperial))} {isImperial ? 'mph' : 'km/h'}</div>
                     </span>
                 </div>
 
@@ -148,8 +165,9 @@ function WeatherCard() {
                                 setCurrDate,
                                 setCurrCond,
                                 setSelectedCard,
-                            ]
-                            }
+                            ]}
+                            isImperial={isImperial}
+
                         />
 
                     </div>
@@ -180,9 +198,9 @@ function WeatherCard() {
                                 {format(parseISO(weatherObj.date), "E")}
                                 <img src={eval("cardImg" + index)} alt="icon for weather condition in forecasted days" />
                                 <div>
-                                    <span>{Math.round(weatherObj.day.maxtemp_c)}°</span>
+                                    <span>{Math.round(celToFar(weatherObj.day.maxtemp_c, isImperial))}°</span>
 
-                                    <span> {Math.round(weatherObj.day.mintemp_c)}°</span>
+                                    <span> {Math.round(celToFar(weatherObj.day.mintemp_c, isImperial))}°</span>
                                 </div>
                             </div>
                         ))
@@ -197,4 +215,4 @@ function WeatherCard() {
     )
 }
 
-export default WeatherCard
+export { WeatherCard }

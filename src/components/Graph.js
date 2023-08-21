@@ -4,8 +4,9 @@ import { Line, getElementAtEvent, Bar } from 'react-chartjs-2';
 import { format, getHours, parseISO } from 'date-fns';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import arrow from '../images/up-arrow.svg'
+import { celToFar, kmhToMph, } from '../utils/unitConversion';
 
-const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates }) => {
+const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates, isImperial }) => {
     let newArrOfColors = (Array(24).fill('#b5b5b5'))
     let [arrOfColors, setArrOfColors] = useState(newArrOfColors)
 
@@ -154,6 +155,7 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
 
                 arrOfSetStates[0](selectedHourObj.condition.icon)
                 arrOfSetStates[1](Math.round(selectedHourObj.temp_c))
+                console.log(isImperial)
                 arrOfSetStates[2](selectedHourObj.chance_of_rain)
                 arrOfSetStates[3](selectedHourObj.humidity)
                 arrOfSetStates[4](Math.round(selectedHourObj.wind_kph))
@@ -191,7 +193,7 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
             data.datasets[1].data = arrOf24hrTemp.map(temp => temp * SCALE)
 
             options.plugins.datalabels.formatter = function (value, context) {
-                return (context.dataIndex % 3 === 0) ? Math.round(value / SCALE) : ''
+                return (context.dataIndex % 3 === 0) ? Math.round(celToFar(value / SCALE, isImperial)) : ''
             }
 
             data.datasets[0].borderWidth = 2
@@ -268,8 +270,7 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
                     <div style={{ position: 'absolute', display: 'flex' }}>
                         {arrOf24hrWind.map((hour, index) => (
                             <div key={'wind' + index} id={'wind' + index}>
-                                {Math.round(hour.wind_kph) + " km/hr "}
-                                <div>
+                                {Math.round(kmhToMph(hour.wind_kph, isImperial)) + (isImperial ? 'mph' : 'km/hr')}                                <div>
                                     <img
                                         src={arrow}
                                         id={'arrow' + index}

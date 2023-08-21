@@ -1,5 +1,5 @@
 import './App.css';
-import WeatherCard from './WeatherCard';
+import { WeatherCard } from './WeatherCard';
 
 
 
