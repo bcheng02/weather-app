@@ -107,40 +107,45 @@ function WeatherCard() {
                     {resultsAndTime}
                 </div>
 
-                <div>
-                    <span><img id="currentImg" src={currentImgSrc} alt="an icon for the current weather"></img></span>
+                <div id="mainInfo">
+                    <div id="leftInfo">
 
-                    <span id="currentTemp" className="unit_temp">{Math.round(celToFar(currentTemp, isImperial))}</span>
+                        <img id="currentImg" src={currentImgSrc} alt="an icon for the current weather"></img>
 
-                    <span
-                        id="celciusTab"
-                        onClick={() => setisImperial(false)}
-                        style={
-                            isImperial ? { color: 'grey' } : { color: 'black' }
-                        }
-                    >°C
-                    </span>
-                    <span>|</span>
-                    <span
-                        id="farenheitTab"
-                        onClick={() => setisImperial(true)}
-                        style={isImperial ? { color: 'black' } : { color: 'grey' }}
-                    >°F
-                    </span>
+                        <span id="currentTemp" className="unit_temp">{Math.round(celToFar(currentTemp, isImperial))}</span>
+
+                        <span
+                            id="celciusTab"
+                            onClick={() => setisImperial(false)}
+                            style={
+                                isImperial ? { color: 'grey' } : { color: 'black' }
+                            }
+                        >°C
+                        </span>
+                        <span>|</span>
+                        <span
+                            id="farenheitTab"
+                            onClick={() => setisImperial(true)}
+                            style={isImperial ? { color: 'black' } : { color: 'grey' }}
+                        >°F
+                        </span>
 
 
-                    <span>
-                        <div id="precip" className="unit_precip">Precipitation: {precip}%</div>
-                        <div id="humidity" className="unit_humidity">Humidity: {humidity}%</div>
-                        <div id="wind" className="unit_wind">Wind: {Math.round(kmhToMph(wind, isImperial))} {isImperial ? 'mph' : 'km/h'}</div>
-                    </span>
+                        <span>
+                            <div id="precip" className="unit_precip">Precipitation: {precip}%</div>
+                            <div id="humidity" className="unit_humidity">Humidity: {humidity}%</div>
+                            <div id="wind" className="unit_wind">Wind: {Math.round(kmhToMph(wind, isImperial))} {isImperial ? 'mph' : 'km/h'}</div>
+                        </span>
+                    </div>
+                    <div id="rightInfo">
+                        <div>Weather</div>
+                        <div id="currentDate">{currDate}</div>
+                        <div id="currentCondition">{currCond}</div>
+                    </div>
+
                 </div>
 
-                <div>
-                    <div>Weather</div>
-                    <div id="currentDate">{currDate}</div>
-                    <div id="currentCondition">{currCond}</div>
-                </div>
+
 
                 <div id="graphContainer">
                     {tabs.map((tab, index) => (
@@ -151,13 +156,15 @@ function WeatherCard() {
                                 setSelectedTab(index)
 
                             }}
-                            className={selectedTab === index ? 'active' : null}
+                            className={selectedTab === index ? 'active tab' : 'tab'}
                         >
                             {tab}
                         </span>
                     ))}
 
-                    <div id="chartContainer" style={selectedTab === 1 ? { width: 41 + "rem", height: 8 + "rem" } : { width: 46 + "rem", height: 10 + "rem" }}>
+                    <div id="chartContainer"
+                        style={selectedTab === 0 ? { width: '735px', height: 'auto', marginLeft: '-40px' } : {}}
+                    >
                         <ChartComponent
                             weatherData={weatherData}
                             selectedTab={selectedTab}
@@ -218,7 +225,7 @@ function WeatherCard() {
                 <a href="https://www.weatherapi.com/" title="Free Weather API">weatherapi.com</a> • <a>Feedback</a>
 
 
-            </div>
+            </div >
         </>
     )
 }

@@ -38,10 +38,11 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
                     fill: true,
                     backgroundColor: 'rgb(255, 245, 204)',
                     borderColor: 'rgb(255,204,0)',
-                    tension: 0.1,
+                    tension: 0.4,
                     datalabels: {
                         color: 'black'
-                    }
+                    },
+                    pointRadius: 0
                 },
                 {
                     label: "placeholder label",
@@ -184,8 +185,10 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
 
             // scaled up as a trick to get higher data labels 
             // (hide old data labels, show new data labels, hide new graph)
-            const SCALE = 1.11
-            data.datasets[1].data = arrOf24hrTemp.map(temp => temp * SCALE)
+            const SCALE = 1.1
+            let arrOf24hrTempScaled = arrOf24hrTemp.map(temp => temp * SCALE)
+            // arrOf24hrTempScaled.splice(0, 0, 9, 9, 9)
+            data.datasets[1].data = arrOf24hrTempScaled
 
             options.plugins.datalabels.formatter = function (value, context) {
                 return (context.dataIndex % 3 === 0) ? Math.round(celToFar(value / SCALE, isImperial)) : ''
@@ -193,10 +196,9 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
 
             data.datasets[0].borderWidth = 2
 
-            // config
             let yMax = Math.max(...arrOf24hrTemp)
             let yMin = Math.min(...arrOf24hrTemp)
-            let yMargin = yMax * 0.05
+            let yMargin = yMax * 0.08
             options.scales.y.max = Math.round(yMax + yMargin)
             options.scales.y.min = Math.round(yMin - yMargin)
             data.datasets[0].datalabels.color = 'rgba(0,0,0,0)'
