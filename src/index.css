@@ -137,8 +137,6 @@ code {
   }
 }
 
-
-
 .navbarLinkContainer {
   cursor: pointer;
   border-radius: 20px;
@@ -160,4 +158,16 @@ code {
   color: #202124;
   text-decoration: none;
   font-size: 14px;
+}
+
+#resultsAndTime {
+  color: #70757a;
+  margin: 10px 0 0 210px;
+  font-size: 14px;
+}
+
+@media only screen and (max-width: 1280px) {
+  #resultsAndTime {
+    margin-left: 60px;
+  }
 }
