@@ -187,7 +187,6 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
             // (hide old data labels, show new data labels, hide new graph)
             const SCALE = 1.1
             let arrOf24hrTempScaled = arrOf24hrTemp.map(temp => temp * SCALE)
-            // arrOf24hrTempScaled.splice(0, 0, 9, 9, 9)
             data.datasets[1].data = arrOf24hrTempScaled
 
             options.plugins.datalabels.formatter = function (value, context) {
