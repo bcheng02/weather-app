@@ -263,21 +263,27 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
 
             return (
                 <>
-                    <div style={{ position: 'absolute', display: 'flex' }}>
+                    <div id='windForecast' >
                         {arrOf24hrWind.map((hour, index) => (
-                            <div key={'wind' + index} id={'wind' + index}>
-                                {Math.round(kmhToMph(hour.wind_kph, isImperial)) + (isImperial ? 'mph' : 'km/hr')}                                <div>
-                                    <img
-                                        src={arrow}
-                                        id={'arrow' + index}
-                                        alt='an arrow describing the wind direction'
-                                        width={16 + 'rem'}
-                                        style={{
-                                            transform: `rotate(${hour.wind_degree + 180}deg)`,
-                                            width: Math.min(Math.max(16, hour.wind_kph * 1.5), 24) + 'px'
-                                        }}
-                                    />
+                            <div key={'wind' + index} id={'wind' + index} className='wind'>
+
+                                <div>
+                                    {Math.round(kmhToMph(hour.wind_kph, isImperial)) + (isImperial ? 'mph' : 'km/h')}
                                 </div>
+
+
+                                <img
+                                    src={arrow}
+                                    id={'arrow' + index}
+                                    alt='an arrow describing the wind direction'
+                                    width={16 + 'rem'}
+                                    style={{
+                                        transform: `rotate(${hour.wind_degree + 180}deg)`,
+                                        width: Math.min(Math.max(16, hour.wind_kph * 1.5), 24) + 'px'
+                                    }}
+                                />
+
+
 
                             </div>
                         ))}

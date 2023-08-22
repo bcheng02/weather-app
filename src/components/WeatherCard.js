@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, Fragment } from "react"
 import getWeather from "../utils/weatherApi"
 import { celToFar, kmhToMph } from "../utils/unitConversion"
 import SearchBar from "./SearchBar"
@@ -113,25 +113,27 @@ function WeatherCard() {
                         <img id="currentImg" src={currentImgSrc} alt="an icon for the current weather"></img>
 
                         <span id="currentTemp" className="unit_temp">{Math.round(celToFar(currentTemp, isImperial))}</span>
-
-                        <span
-                            id="celciusTab"
-                            onClick={() => setisImperial(false)}
-                            style={
-                                isImperial ? { color: 'grey' } : { color: 'black' }
-                            }
-                        >°C
+                        <span id="celFarContainer">
+                            <span
+                                id="celciusTab"
+                                onClick={() => setisImperial(false)}
+                                style={
+                                    isImperial ? { color: 'grey' } : { color: 'black', cursor: 'text' }
+                                }
+                            >°C
+                            </span>
+                            <span id="tempDivider">|</span>
+                            <span
+                                id="farenheitTab"
+                                onClick={() => setisImperial(true)}
+                                style={isImperial ? { color: 'black', cursor: 'text' } : { color: 'grey' }}
+                            >°F
+                            </span>
                         </span>
-                        <span>|</span>
-                        <span
-                            id="farenheitTab"
-                            onClick={() => setisImperial(true)}
-                            style={isImperial ? { color: 'black' } : { color: 'grey' }}
-                        >°F
-                        </span>
 
 
-                        <span>
+
+                        <span id="phwContainer">
                             <div id="precip" className="unit_precip">Precipitation: {precip}%</div>
                             <div id="humidity" className="unit_humidity">Humidity: {humidity}%</div>
                             <div id="wind" className="unit_wind">Wind: {Math.round(kmhToMph(wind, isImperial))} {isImperial ? 'mph' : 'km/h'}</div>
@@ -148,19 +150,29 @@ function WeatherCard() {
 
 
                 <div id="graphContainer">
-                    {tabs.map((tab, index) => (
-                        <span
-                            id={tab}
-                            key={tab}
-                            onClick={() => {
-                                setSelectedTab(index)
+                    <div id="tabs">
+                        {tabs.map((tab, index) => (
+                            <Fragment key={tab + 'fragment'}>
+                                <span
+                                    id={tab}
+                                    key={tab}
+                                    onClick={() => {
+                                        setSelectedTab(index)
 
-                            }}
-                            className={selectedTab === index ? 'active tab' : 'tab'}
-                        >
-                            {tab}
-                        </span>
-                    ))}
+                                    }}
+                                    className={selectedTab === index ? 'active  tab' : 'tab'}
+                                >
+                                    {tab}
+                                </span>
+                                {(index === 0 || index === 1) && <span className="divider" key={tab + 'divider'}></span>}
+
+                            </Fragment>
+
+
+
+                        ))}
+                    </div>
+
 
                     <div id="chartContainer"
                         style={selectedTab === 0 ? { width: '735px', height: 'auto', marginLeft: '-40px' } : {}}
@@ -222,7 +234,13 @@ function WeatherCard() {
                     }
                 </div>
 
-                <a href="https://www.weatherapi.com/" title="Free Weather API">weatherapi.com</a> • <a>Feedback</a>
+                <div id="bottomLinks">
+                    <div></div>
+                    <a id='apiSource' href="https://www.weatherapi.com/" title="Free Weather API">weatherapi.com</a>
+                    <div>•</div>
+                    <a id="feedback" href="https://media.tenor.com/OBQA8z0B8swAAAAM/trash-garbage-truck.gif">Feedback</a>
+
+                </div>
 
 
             </div >
