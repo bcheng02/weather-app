@@ -111,7 +111,8 @@ code {
 
 
 #resultsAndTime,
-#Navbar {
+#Navbar,
+#currentTemp {
   font-family: 'Product-sans', Arial, Helvetica, sans-serif;
 }
 
@@ -186,14 +187,112 @@ code {
   display: flex;
 }
 
-.tab.active {
-  border-bottom: 3px solid #fbbc04;
+
+#currentImg {
+  width: 60px;
+  height: 60px;
+}
+
+#currentTemp {
+  font-size: 48px;
+  color: #202124
 }
 
 
 
+#celFarContainer {
+  font-size: 16px;
+  padding: 6px 0 0 6px;
+  display: flex;
+  gap: 5px;
+}
 
+#celciusTab {
+  cursor: pointer;
+}
 
+#tempDivider {
+  color: #70757a;
+}
+
+#farenheitTab {
+  cursor: pointer;
+}
+
+#phwContainer {
+  color: #70757a;
+  font-size: 12px;
+  line-height: 16px;
+  padding-left: 9px;
+  padding-top: 6px;
+}
+
+#rightInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  color: #70757a;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+#rightInfo div:first-child {
+  font-size: 22px;
+  color: #202124;
+  line-height: 26px;
+}
+
+#tabs {
+  display: flex;
+  font-size: 14px;
+  padding: 10px 0;
+  gap: 11px;
+}
+
+.tab {
+  padding-bottom: 4px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+}
+
+.tab.active {
+  border-bottom: 3px solid #fbbc04;
+  cursor: default;
+}
+
+.divider {
+  border-right: 1px solid #dadce0;
+  width: 1px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#windForecast {
+  position: absolute;
+  display: flex;
+  gap: 41px;
+  margin-left: 10px;
+}
+
+#chartContainer #windForecast {
+  height: 100px;
+}
+
+.wind {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+  gap: 35px;
+  width: 43px;
+}
+
+.wind div:first-child {
+  font-size: 12px;
+}
 
 
 
@@ -202,6 +301,7 @@ code {
 #weekForecast {
   display: flex;
   gap: 18px;
+  margin-top: 10px;
 }
 
 .card {
@@ -213,10 +313,36 @@ code {
 }
 
 .card>img {
-  /* width: 50%; */
+  width: 48px;
+  height: 48px;
 }
 
 .card.active {
   background-color: #f8f9fa;
   border-radius: 10px;
+}
+
+#bottomLinks {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+}
+
+#bottomLinks a {
+  color: #70757a;
+}
+
+#feedback {
+  text-decoration: none;
+}
+
+#feedback:hover {
+  text-decoration-line: underline;
+}
+
+
+#bottomLinks div:first-child {
+  width: 500px;
+  border-bottom: 1px solid #dadce0;
 }
