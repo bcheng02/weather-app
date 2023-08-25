@@ -37,7 +37,7 @@ code {
   width: 7rem;
 }
 
-#searchBar {
+#searchStuff {
   display: flex;
   justify-content: space-between;
   width: min(45vw, 690px);
@@ -48,9 +48,16 @@ code {
   margin-left: 40px;
 }
 
-#searchBar:hover {
+#searchStuff:hover {
   box-shadow: 0 2px 8px 1px rgba(64, 60, 67, .24);
   border-color: rgba(223, 225, 229, 0);
+}
+
+#searchStuff.active {
+  margin-left: 20px;
+  width: min(calc(45vw + 20px), calc(690px + 20px));
+  /* border-radius: 24px 24px 0 0; */
+  /* background-color: green; */
 }
 
 #searchContainer {
@@ -61,14 +68,17 @@ code {
 
 #search,
 #beforeSearch {
-  font-size: 14px;
+  font-size: 16px;
   border: none;
   border-radius: 24px;
+  display: flex;
+  gap: 0px;
 }
 
 
 #search {
   flex: 1;
+  padding-top: 0;
 }
 
 #search:focus-visible {
@@ -76,18 +86,20 @@ code {
 }
 
 #beforeSearch {
-  width: 5rem;
+  width: 78px;
   color: black;
+  background-color: white;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: 10px;
 }
 
 #btnContainer {
   display: flex;
   align-items: center;
-}
-
-#searchBtn {
-  width: 50px;
-  height: 30px
+  gap: 7px;
+  padding-right: 15px;
 }
 
 #xBtn,
@@ -100,13 +112,70 @@ code {
 
 #xIcon,
 #searchIcon {
-  max-width: 45%;
+  width: 24px;
   cursor: pointer;
+}
+
+#firstSearchIconGrey {
+  visibility: hidden;
+  position: absolute;
+  width: 20px;
+
+}
+
+#firstSearchIconGrey.active {
+  visibility: visible;
+  position: relative;
+}
+
+.searchIconGrey {
+  width: 20px;
 }
 
 #btnBorder {
   border-left: 1px solid #dadce0;
   height: 65%;
+}
+
+#locationResults {
+  visibility: hidden;
+  position: absolute;
+}
+
+#locationResults.active {
+  visibility: visible;
+  margin-left: 20px;
+  font-size: 16px;
+  padding-top: 10px;
+  z-index: 123;
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+
+  width: min(calc(45vw + 20px), calc(690px + 20px));
+  border-radius: 0 0 24px 24px;
+  border: 1px solid transparent;
+  box-shadow: 0 2px 5px 1px rgba(64, 60, 67, .16);
+  background-color: white;
+}
+
+#locationResults>* {
+  padding-left: 10px;
+}
+
+.locationSuggestion {
+  display: flex;
+  padding: 5px 0;
+  cursor: pointer;
+}
+
+.locationSuggestion:hover {
+  background-color: #f8f9fa;
+}
+
+.locationSuggestion div {
+  margin-left: 12px;
+  display: flex;
 }
 
 
@@ -125,10 +194,6 @@ code {
 }
 
 @media only screen and (max-width: 1280px) {
-  #top {
-    /* padding-left: 5vw; */
-  }
-
   #Navbar {
     margin-left: 15px;
   }
@@ -202,7 +267,7 @@ code {
 
 #celFarContainer {
   font-size: 16px;
-  padding: 6px 0 0 6px;
+  padding: 10px 0 0 6px;
   display: flex;
   gap: 5px;
 }
