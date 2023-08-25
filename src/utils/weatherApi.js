@@ -55,8 +55,8 @@ async function getLocationResults(searchTerm, setLcnRslts) {
 
         // no results, keep the bottom border radius of search bar & don't apply active to results
         if (Array.isArray(responseJSON)) {
-            console.log(responseJSON)
-            console.log(responseJSON.forEach(x => console.log(`${x.name}, ${x.region}`)))
+            // console.log(responseJSON)
+            // console.log(responseJSON.forEach(x => console.log(`${x.name}, ${x.region}`)))
             setLcnRslts(responseJSON.map(lcn => `${lcn.name}, ${lcn.region}`))
         }
     } catch (error) {
