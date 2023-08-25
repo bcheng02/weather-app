@@ -1,5 +1,5 @@
 import { useState, useEffect, Fragment } from "react"
-import getWeather from "../utils/weatherApi"
+import { getWeather } from "../utils/weatherApi"
 import { celToFar, kmhToMph } from "../utils/unitConversion"
 import SearchBar from "./SearchBar"
 import Navbar from "./Navbar"
@@ -20,13 +20,13 @@ function WeatherCard() {
     let [resultsAndTime, setResultsAndTime] = useState("123 results in 321 sec")
 
     let [isImperial, setisImperial] = useState(false)
-    let [currentImgSrc, setCurrentImgSrc] = useState('')
-    let [currentTemp, setCurrentTemp] = useState('12345')
-    let [precip, setPrecip] = useState('placeholder for precip')
-    let [humidity, setHumidity] = useState('placeholder for humidity')
-    let [wind, setWind] = useState('placeholder for wind')
-    let [currDate, setCurrDate] = useState('placeholder for current date')
-    let [currCond, setCurrCond] = useState('placeholder for current condition')
+    let [currentImgSrc, setCurrentImgSrc] = useState('https://cdn.weatherapi.com/weather/64x64/day/116.png')
+    let [currentTemp, setCurrentTemp] = useState('20')
+    let [precip, setPrecip] = useState('0')
+    let [humidity, setHumidity] = useState('0')
+    let [wind, setWind] = useState('0')
+    let [currDate, setCurrDate] = useState('Monday 9:00 a.m.')
+    let [currCond, setCurrCond] = useState('Sunny')
 
     let [cardImg0, setCardImg0] = useState('')
     let [cardImg1, setCardImg1] = useState('')
@@ -50,15 +50,18 @@ function WeatherCard() {
 
     // TODO: see why the fcn calls twice on page load
     useEffect(() => {
-        handleSearch(searchTerm)
+        handleSearch('Vancouver')
     }, [])
 
-    async function handleSearch() {
+    async function handleSearch(x) {
+        setSearchTerm(x)
         try {
-            data = await getWeather(searchTerm)
+
+            // use x instead of state searchTerm state since x is faster!!!
+            data = await getWeather(x)
             setWeatherData(data)
         } catch (error) {
-            throw error
+            return
         }
 
         let currentDate = parseISO(data[0].current.last_updated)

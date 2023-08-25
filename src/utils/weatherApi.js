@@ -4,12 +4,12 @@ const NUM_DAYS = 8
 
 
 // returns arr w/ [weather info, time the API call]
-async function getWeather(userLocation) {
+async function getWeather(searchTerm) {
     let startTime = performance.now()
     let endTime
 
     try {
-        const response = await fetch(`${API_URL}/v1/forecast.json?key=${API_KEY}&q=${userLocation}&days=${NUM_DAYS}`, { mode: 'cors' })
+        const response = await fetch(`${API_URL}/v1/forecast.json?key=${API_KEY}&q=${searchTerm}&days=${NUM_DAYS}`, { mode: 'cors' })
 
         if (!response.ok) {
             throw new Error('unable to fetch weather data')
@@ -19,22 +19,16 @@ async function getWeather(userLocation) {
 
         endTime = performance.now()
 
-
-
         // playing around with outputs
-        console.log(responseJSON)
-        console.log(responseJSON.forecast.forecastday) // arr of 8 days
+        // console.log(responseJSON)
+        // console.log(responseJSON.forecast.forecastday) // arr of 8 days
 
-        let resultMsg = (`About 1 result (${(endTime - startTime) / 1000} seconds)`)
+        function roundTwoDec(num) {
+            return Math.round(num * 100) / 100
+        }
+
+        let resultMsg = (`About 1 result (${roundTwoDec((endTime - startTime) / 1000)} seconds)`)
         return [responseJSON, resultMsg]
-
-
-        // displaying values on HTML
-        // I don't have to select this stuff because it's literally being made
-        // currentTemp.textContent = responseJSON.current.temp_c
-        // currentCondition.textContent = responseJSON.current.condition.text
-        // ** DON'T FORGET THIS img.src = "http:" + responseJSON.current.condition.icon
-
     } catch (error) {
         alert(
             "Invalid location, please enter:" +
@@ -54,4 +48,21 @@ async function getWeather(userLocation) {
 
 }
 
-export default getWeather
+async function getLocationResults(searchTerm, setLcnRslts) {
+    try {
+        let response = await fetch(`${API_URL}/v1/search.json?key=${API_KEY}&q=${searchTerm}`)
+        let responseJSON = await (response.json())
+
+        // no results, keep the bottom border radius of search bar & don't apply active to results
+        if (Array.isArray(responseJSON)) {
+            console.log(responseJSON)
+            console.log(responseJSON.forEach(x => console.log(`${x.name}, ${x.region}`)))
+            setLcnRslts(responseJSON.map(lcn => `${lcn.name}, ${lcn.region}`))
+        }
+    } catch (error) {
+        throw (error)
+    }
+
+}
+
+export { getWeather, getLocationResults }

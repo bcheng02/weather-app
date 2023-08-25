@@ -268,7 +268,7 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
                             <div key={'wind' + index} id={'wind' + index} className='wind'>
 
                                 <div>
-                                    {Math.round(kmhToMph(hour.wind_kph, isImperial)) + (isImperial ? 'mph' : 'km/h')}
+                                    {Math.round(kmhToMph(hour.wind_kph, isImperial)) + (isImperial ? ' mph' : ' km/h')}
                                 </div>
 
 
