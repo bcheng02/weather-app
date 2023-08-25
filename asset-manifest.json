@@ -1,20 +1,21 @@
 {
   "files": {
-    "main.css": "/weather-app/static/css/main.ca5e77d7.css",
-    "main.js": "/weather-app/static/js/main.4ead8d26.js",
+    "main.css": "/weather-app/static/css/main.bc56806c.css",
+    "main.js": "/weather-app/static/js/main.11f4056b.js",
     "static/js/787.28cb0dcd.chunk.js": "/weather-app/static/js/787.28cb0dcd.chunk.js",
     "static/media/Product Sans Regular.ttf": "/weather-app/static/media/Product Sans Regular.d165384076551a756b3c.ttf",
     "static/media/weather-logo.svg": "/weather-app/static/media/weather-logo.8c3843d0016a86d4e91866ae12842305.svg",
+    "static/media/search-icon-grey.svg": "/weather-app/static/media/search-icon-grey.b4cf2b6941abf05c9a7cc06daccef08c.svg",
     "static/media/search-icon.svg": "/weather-app/static/media/search-icon.aa7d9e0c5f3f5ee0ad30df66eaa7ffd6.svg",
     "index.html": "/weather-app/index.html",
     "static/media/up-arrow.svg": "/weather-app/static/media/up-arrow.d340f5a8bf45cf437aec68e6db40f588.svg",
     "static/media/close-icon.svg": "/weather-app/static/media/close-icon.ecf003f520880aea339d982ae241229e.svg",
-    "main.ca5e77d7.css.map": "/weather-app/static/css/main.ca5e77d7.css.map",
-    "main.4ead8d26.js.map": "/weather-app/static/js/main.4ead8d26.js.map",
+    "main.bc56806c.css.map": "/weather-app/static/css/main.bc56806c.css.map",
+    "main.11f4056b.js.map": "/weather-app/static/js/main.11f4056b.js.map",
     "787.28cb0dcd.chunk.js.map": "/weather-app/static/js/787.28cb0dcd.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.ca5e77d7.css",
-    "static/js/main.4ead8d26.js"
+    "static/css/main.bc56806c.css",
+    "static/js/main.11f4056b.js"
   ]
 }
