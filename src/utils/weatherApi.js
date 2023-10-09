@@ -1,4 +1,4 @@
-const API_KEY = "86997d71c9a94c90842204030232409"
+const API_KEY = "112dfd1d44394ce899c173246230910"
 const API_URL = "https://api.weatherapi.com"
 const NUM_DAYS = 8
 
