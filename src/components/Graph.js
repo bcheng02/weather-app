@@ -35,7 +35,7 @@ const ChartComponent = ({ weatherData, selectedTab, selectedCard, arrOfSetStates
                 {
                     label: "placeholder label",
                     data: [],
-                    fill: true,
+                    fill: 'start',
                     backgroundColor: 'rgb(255, 245, 204)',
                     borderColor: 'rgb(255,204,0)',
                     tension: 0.4,
