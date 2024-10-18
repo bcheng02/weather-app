@@ -1,4 +1,4 @@
-const API_KEY = "bbb264fc230b48a5b01213226241206"
+const API_KEY = process.env.REACT_APP_API_KEY
 const API_URL = "https://api.weatherapi.com"
 const NUM_DAYS = 8
 
